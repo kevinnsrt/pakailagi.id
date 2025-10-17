@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SplashPage2 extends StatefulWidget {
+  const SplashPage2({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SplashPage2> createState() => _SplashPage2State();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SplashPage2State extends State<SplashPage2> {
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(12)),
               foregroundColor: Colors.white,backgroundColor: Color.fromRGBO(55, 152, 90, 1)),
-            onPressed: (){}, child: Text("Get Started")),
+            onPressed: (){}, child: Text("Get Started",style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700),)),
           ),
           
         ],
