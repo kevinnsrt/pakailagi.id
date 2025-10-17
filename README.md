@@ -58,3 +58,16 @@ Menampung semua data yang dihasilkan oleh pengguna
 ## 🧱 Implementasi Layout Dasar (3 Halaman)
 Dapat dilihat pada tautan figma berikut: https://www.figma.com/design/YurNtDFBSFp1e0cekH6O1j/UI-DESIGN?node-id=0-1&t=hgt4E52uiY95WwO9-1
 password = pakailagi.id
+
+---
+
+## 📸 Screenshot Aplikasi
+
+**Splash Screen**
+![Splash Screen](assets/screenshots/splash.png)
+
+**Get Started**
+![Get Started](assets/screenshots/getstarted.png)
+
+**Login Page**
+![Login Page](assets/screenshots/login.png)
