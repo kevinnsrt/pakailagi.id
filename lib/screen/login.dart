@@ -9,27 +9,34 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Center(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(height: 12,),
+          SizedBox(height:24,),
           Image.asset("assets/login_logo.png",
           width: 366,
           height: 366,),
 
-         Row( mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("Pakai Lagi, Selamatkan Bumi",style: TextStyle(fontSize: 32,fontWeight: FontWeight.bold),) ,
-          ],
-         ),
-          
+          SizedBox(height: 35,),
+          SizedBox(width: 300,
+          child: Text("Pakai Lagi, Selamatkan Bumi",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 32,fontWeight: FontWeight.bold),) ,),
 
-          Text("Setiap pakaian yang kamu pakai ulang berarti satu langkah lebih hijau bagi lingkungan."),
-          SizedBox(height: 129,),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(foregroundColor: Colors.white,backgroundColor: Color.fromRGBO(55, 152, 90, 1)),
-            onPressed: (){}, child: Text("Get Started"))
+          SizedBox(height: 35,),
+          SizedBox(width: 300,
+          child: Text("Setiap pakaian yang kamu pakai ulang berarti satu langkah lebih hijau bagi lingkungan.",style: TextStyle(fontSize: 16),textAlign: TextAlign.center,maxLines: 3,),),
+          SizedBox(height: 80,),
+
+          SizedBox(
+            width: 284,
+            height: 65,
+            child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(12)),
+              foregroundColor: Colors.white,backgroundColor: Color.fromRGBO(55, 152, 90, 1)),
+            onPressed: (){}, child: Text("Get Started")),
+          ),
           
         ],
       ),
