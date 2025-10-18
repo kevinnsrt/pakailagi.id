@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_pm/screen/login.dart';
 import 'package:tubes_pm/screen/splash.dart';
 
 void main() {
@@ -14,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: const LoginPage()
+        body: const SplashPage()
       ),
     );
   }

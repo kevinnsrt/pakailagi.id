@@ -10,10 +10,13 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(backgroundColor: Colors.white,),
+      body: Center(
+        child: Column(
         children: [
-          SizedBox(height: 75,),
+          // SizedBox(height: 75,),
           Text("Halo Sobat !",style: TextStyle(fontSize: 32,fontWeight: FontWeight.bold),),
           SizedBox(height: 30,),
           Text("Selamat datang kembali, kami merindukanmu",
@@ -30,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
 
            SizedBox(width: 320,
           height: 60,
-          child:TextField(decoration: InputDecoration(labelText: "Password",border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))),)
+          child:TextField(obscureText: true,decoration: InputDecoration(labelText: "Password",border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))),)
           ,),
 
           SizedBox(height: 15,),
@@ -39,8 +42,8 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               SizedBox(width: 127,
-              child: Text("Lupa Password ?",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),),
-              SizedBox(width: 36,),
+              child: Text("Lupa Password ?",style: TextStyle(decoration: TextDecoration.underline,fontSize: 16,fontWeight: FontWeight.bold),),),
+              SizedBox(width: 40,),
             ],
           ),
 
@@ -74,6 +77,8 @@ class _LoginPageState extends State<LoginPage> {
             height: 60,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
+                elevation: 4,
+                backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -94,6 +99,8 @@ class _LoginPageState extends State<LoginPage> {
               height: 60,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
+                  elevation: 4,
+                  backgroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -111,6 +118,7 @@ class _LoginPageState extends State<LoginPage> {
             ],
           )
           ],
+      ),
       ),
     );
   }
