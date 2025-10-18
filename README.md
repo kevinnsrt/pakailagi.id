@@ -18,7 +18,7 @@ Melalui aplikasi ini, pengguna dapat **menjual, membeli, dan berbagi pakaian bek
 
 ---
 
-## ✨ Rencana Fitur-fitur Aplikasi
+## ✨ Rencana Fitur Aplikasi
 
 ### 1. CRUD (Create, Read, Update, Delete)
 Untuk membuat aplikasi mampu mendukung jual-beli pakaian bekas dengan membuat postingan, melihat pakaian, memperbarui kriteria, dan menghapus item.
