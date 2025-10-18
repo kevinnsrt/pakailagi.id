@@ -71,3 +71,5 @@ password = pakailagi.id
 
 **Login Page**
 ![Login Page](assets/screenshots/login.png)
+
+**KLIK LOGO PADA SPLASH SCREEN UNTUK BERPINDAH KE SCREEN SELAJUTNYA **
