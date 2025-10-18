@@ -21,25 +21,25 @@ Melalui aplikasi ini, pengguna dapat **menjual, membeli, dan berbagi pakaian bek
 ## ✨ Rencana Fitur Aplikasi
 
 ### 1. CRUD (Create, Read, Update, Delete)
-Untuk membuat aplikasi mampu mendukung jual-beli pakaian bekas dengan membuat postingan, melihat pakaian, memperbarui kriteria, dan menghapus item.
+Mendukung proses pengelolaan data secara penuh, meliputi pembuatan, penayangan, pembaruan, dan penghapusan postingan pakaian bekas. Fitur ini menjadi inti sistem jual-beli dalam aplikasi.
 
 ### 2. Authentication (google, apple, native)
-Aplikasi ini mendukung proses autentikasi untuk memastikan hanya pengguna yang kredibel yang dapat masuk.
+Aplikasi Menyediakan sistem autentikasi yang aman dan fleksibel, memungkinkan pengguna untuk masuk menggunakan akun Google, Apple, atau melalui pendaftaran native.
 
-### 3. Location setiap user
-Menggunakan lokasi user untuk menemukan penjual dan pembeli yang berdekatan demi kenyamanan jual-beli
+### 3. User Location
+Menggunakan lokasi pengguna untuk menampilkan penjual atau pembeli terdekat, sehingga proses transaksi menjadi lebih mudah, cepat, dan efisien.
 
-### 4. Profile
+### 4. User Profile
 Menampilkan informasi pengguna, daftar barang yang dijual, serta riwayat transaksi.
 
-### 5. Camera
+### 5. Camera Integration
 Untuk memfasilitasi penjualan agar dapat mengunggah foto pakaian
 
-### 6. Chat
+### 6. Chat System
 Menyediakan obrolan peer-to-peer antara penjual dan pembeli demi keamanan dan kenyamanan transaksi
 
-### 7. Storage (rest api, firebase)
-Menampung semua data yang dihasilkan oleh pengguna
+### 7. Data Storage (REST API & Firebase)
+Menyimpan seluruh data pengguna, transaksi, dan media secara aman melalui integrasi REST API dan Firebase, menjamin ketersediaan serta konsistensi data di seluruh platform.
 
 ---
 
