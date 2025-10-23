@@ -19,22 +19,23 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             // SizedBox(height: 75,),
             Text("Halo Sobat !",style: TextStyle(fontSize: 32,fontWeight: FontWeight.bold),),
-            SizedBox(height: 30,),
+            SizedBox(height: 24,),
             Text("Selamat datang kembali, kami merindukanmu",
             textAlign: TextAlign.center,
             maxLines: 2,style: TextStyle(fontSize: 20),),
           
             SizedBox(height: 80,),
             SizedBox(width: 320,
-            height: 60,
+            height: 62,
             child:TextField(decoration: InputDecoration(labelText: "Masukkan Username",border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))),)
             ,),
           
             SizedBox(height: 30,),
           
              SizedBox(width: 320,
-            height: 60,
-            child:TextField(obscureText: true,decoration: InputDecoration(labelText: "Password",border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))),)
+            height: 62,
+            child:TextField(obscureText: true,decoration: InputDecoration(
+            labelText: "Password",border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))),)
             ,),
           
             SizedBox(height: 15,),
