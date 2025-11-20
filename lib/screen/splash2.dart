@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_pm/screen/login.dart';
+import 'package:tubes_pm/login-register/login.dart';
 import 'package:tubes_pm/screen/splash3.dart';
 
 class SplashPage2 extends StatefulWidget {
