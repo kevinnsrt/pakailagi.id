@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_pm/screen/login.dart';
-import 'package:tubes_pm/screen/splash3.dart';
 
-class SplashPage2 extends StatefulWidget {
-  const SplashPage2({super.key});
+class SplashPage3 extends StatefulWidget {
+  const SplashPage3({super.key});
 
   @override
-  State<SplashPage2> createState() => _SplashPage2State();
+  State<SplashPage3> createState() => _SplashPage3State();
 }
 
-class _SplashPage2State extends State<SplashPage2> {
+class _SplashPage3State extends State<SplashPage3> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,27 +19,27 @@ class _SplashPage2State extends State<SplashPage2> {
           SizedBox(height: 24),
           Image.asset("assets/login_logo.png", width: 366, height: 366),
 
-          SizedBox(height: 30),
+          SizedBox(height: 35),
           SizedBox(
             width: 300,
             child: Text(
-              "Ekspresikan Gaya Hijau",
+              "Jual Cepat & Aman",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
             ),
           ),
 
-          SizedBox(height: 30),
+          SizedBox(height: 35),
           SizedBox(
             width: 300,
             child: Text(
-              "Bandingakan Produk, temukan penjual terpercaya, nikmati proses jual beli yang aman.",
+              "Unggah barang dengan mudah, atur pesanan, dan temukan pembeli yang tepat untuk preloved-mu",
               style: TextStyle(fontSize: 16,color: Color.fromRGBO(55, 65, 81, 1)),
               textAlign: TextAlign.center,
               maxLines: 3,
             ),
           ),
-          SizedBox(height: 38),
+          SizedBox(height: 52),
 
           SizedBox(
             child: Row(
@@ -53,7 +52,7 @@ class _SplashPage2State extends State<SplashPage2> {
                ),
                 SizedBox(width: 8,),
                 Container(
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(12),color:Color.fromRGBO(156, 163, 175, 1), ),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(12),color:Color.fromRGBO(64, 138, 142, 1), ),
                   width: 48,
                   height: 8,
                 ),
@@ -62,7 +61,7 @@ class _SplashPage2State extends State<SplashPage2> {
           ),
 
           SizedBox(
-            height: 38,
+            height: 60,
           ),
 
           SizedBox(
@@ -80,7 +79,7 @@ class _SplashPage2State extends State<SplashPage2> {
                 Navigator.push(
                   context,
                   MaterialPageRoute<void>(
-                    builder: (context) => const SplashPage3(),
+                    builder: (context) => const LoginPage(),
                   ),
                 );
               },

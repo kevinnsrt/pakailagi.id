@@ -12,7 +12,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color.fromRGBO(55, 192, 90, 1),
+      color: Color.fromRGBO(62, 138, 142, 1),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
