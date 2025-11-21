@@ -80,9 +80,9 @@ class _SplashPage2State extends State<SplashPage2> {
               onPressed: () {
                 Navigator.push(context, PageTransition(
                     child: const SplashPage3(),
-                    type: PageTransitionType.slideLeftFade,
+                    type: PageTransitionType.slideUp,
                     duration: Duration(milliseconds: 500),
-                    curve: Curves.easeOut,
+                    curve: Curves.easeIn,
                 ));
               },
               child: Text(

@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:smooth_transition/smooth_transition.dart';
 import 'package:tubes_pm/authentication/register_auth.dart';
 import 'package:tubes_pm/colors/colors.dart';
-import 'package:tubes_pm/login-register/register/register2.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+class RegisterPage2 extends StatefulWidget {
+  const RegisterPage2({super.key});
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  State<RegisterPage2> createState() => _RegisterPage2State();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
-  final TextEditingController _name = TextEditingController();
-  final TextEditingController _email = TextEditingController();
-  final TextEditingController _pass = TextEditingController();
-  final TextEditingController _confirmPass = TextEditingController();
+class _RegisterPage2State extends State<RegisterPage2> {
+  final TextEditingController _number = TextEditingController();
+  final TextEditingController _location = TextEditingController();
 
   RegisterAuth auth = RegisterAuth();
 
@@ -53,7 +49,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         width: 175,
                         height: 8,
                         decoration: BoxDecoration(
-                            color: Color.fromRGBO(156, 163, 172, 1),
+                            color: AppColors.primary500,
                             borderRadius: BorderRadius.circular(12)
                         ),
                       ),
@@ -95,19 +91,12 @@ class _RegisterPageState extends State<RegisterPage> {
                           SizedBox(
                           width:355,
                             height: 20,
-                            child: Text("Nama Lengkap",style: TextStyle(color: AppColors.primary500),),
+                            child: Text("Nomor Telepon",style: TextStyle(color: AppColors.primary500),),
                           ),
                           TextField(
-                            controller: _name,
+                            controller: _number,
                             decoration: InputDecoration(
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(
-                                    color: AppColors.primary500
-                                ),
-                              ),
-                              floatingLabelBehavior: FloatingLabelBehavior.never,
-                              labelText: "Nama Lengkap Kamu",
+                              labelText: "Nomor Telepon",
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -123,19 +112,12 @@ class _RegisterPageState extends State<RegisterPage> {
                           SizedBox(
                             width:355,
                             height: 20,
-                            child: Text("Email",style: TextStyle(color: AppColors.primary500,)),
+                            child: Text("Lokasi",style: TextStyle(color: AppColors.primary500,)),
                           ),
                           TextField(
-                            controller: _email,
+                            controller: _location,
                             decoration: InputDecoration(
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(
-                                  color: AppColors.primary500
-                                ),
-                              ),
-                              floatingLabelBehavior: FloatingLabelBehavior.never,
-                              labelText: "Alamat Email Kamu",
+                              labelText: "Lokasi",
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -144,61 +126,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         ],
                       ),
 
-                      Column(
-                        spacing: 8,
-                        children: [
-                          SizedBox(
-                            width:355,
-                            height: 20,
-                            child: Text("Kata Sandi",style: TextStyle(color: AppColors.primary500,)),
-                          ),
-                          TextField(
-                            controller: _pass,
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(
-                                    color: AppColors.primary500
-                                ),
-                              ),
-                              floatingLabelBehavior: FloatingLabelBehavior.never,
-                              labelText: "Masukkan kata sandi",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      Column(
-                        spacing: 8,
-                        children: [
-                          SizedBox(
-                            width:355,
-                            height: 20,
-                            child: Text("Konfirmasi Kata Sandi",style: TextStyle(color: AppColors.primary500,)),
-                          ),
-                          TextField(
-                            controller: _confirmPass,
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(
-                                    color: AppColors.primary500
-                                ),
-                              ),
-                              floatingLabelBehavior: FloatingLabelBehavior.never,
-                              labelText: "Konfirmasi Kata Sandi",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      SizedBox(height: 56,),
                     ],
                   ),
                 ),
@@ -218,29 +146,15 @@ class _RegisterPageState extends State<RegisterPage> {
                                 backgroundColor: Color.fromRGBO(62, 138, 142, 1),
                                 foregroundColor: Colors.white
                             ),onPressed: (){
-                              auth.username = _name.text;
-                              auth.email = _email.text;
-                              auth.password = _pass.text;
-                              auth.confirmPassword = _confirmPass.text;
+                              auth.number = _number.text;
+                              auth.location = _location.text;
 
-                              if(auth.username.isEmpty || auth.email.isEmpty || auth.password.isEmpty || auth.confirmPassword.isEmpty){
+                              if(auth.number.isEmpty || auth.location.isEmpty){
                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Data tidak boleh kosong",
                                   style: TextStyle(color: AppColors.grayscale50,fontWeight: FontWeight.bold),),
                                   backgroundColor: AppColors.primary500,));
-
-                              } else if(auth.password != auth.confirmPassword){
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Password tidak sesuai",
-                                    style: TextStyle(color: AppColors.grayscale50,fontWeight: FontWeight.bold),),
-                                  backgroundColor: AppColors.primary500,));
-                              }
-                              else{
-                                auth.register1();
-                               Navigator.push(context, PageTransition(
-                                   child: const RegisterPage2(),
-                                   type: PageTransitionType.fade,
-                                   duration: Duration(milliseconds: 300),
-                                 curve: Curves.easeIn,
-                               ));
+                              }else{
+                                auth.register2();
                               }
                         }, child: Text("Selanjutnya",style: TextStyle(fontWeight: FontWeight.bold),)),
                       ),
@@ -256,7 +170,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),onPressed: (){
                           Navigator.pop(context);
                         },
-                            child: Text("Batal",style: TextStyle(fontWeight: FontWeight.bold),)),
+                            child: Text("Kembali",style: TextStyle(fontWeight: FontWeight.bold),)),
                       ),
                     ],
                   ),
