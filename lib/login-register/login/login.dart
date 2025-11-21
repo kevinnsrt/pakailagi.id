@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_pm/login-register/register.dart';
+import 'package:smooth_transition/smooth_transition.dart';
+import 'package:tubes_pm/login-register/register/register.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -79,7 +80,11 @@ class _LoginPageState extends State<LoginPage> {
                         foregroundColor: Color.fromRGBO(37, 70, 74, 1),
                           elevation: 5,
                     ),onPressed: (){
-                      Navigator.push(context, MaterialPageRoute<void>(builder: (context)=>const RegisterPage()));
+                     Navigator.push(context, PageTransition(
+                         child: const RegisterPage(),
+                         type: PageTransitionType.fade,
+                         duration: Duration(milliseconds: 300),
+                         curve: Curves.easeIn));
                     },
                      child: Text("Daftar",style: TextStyle(fontWeight: FontWeight.bold),)),
                   ),

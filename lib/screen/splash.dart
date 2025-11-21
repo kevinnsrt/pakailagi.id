@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smooth_transition/smooth_transition.dart';
 import 'package:tubes_pm/screen/splash2.dart';
 
 class SplashPage extends StatefulWidget {
@@ -19,12 +20,12 @@ class _SplashPageState extends State<SplashPage> {
           children: [
             GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (context) => const SplashPage2(),
-                  ),
-                );
+                Navigator.push(context, PageTransition(
+                  child: const SplashPage2(),
+                  type: PageTransitionType.scaleFade,
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.easeIn,
+                ));
               },
               child: Image.asset("assets/logo.png"),
             ),

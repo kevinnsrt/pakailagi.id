@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_pm/login-register/login.dart';
+import 'package:smooth_transition/smooth_transition.dart';
+import 'package:tubes_pm/login-register/login/login.dart';
 import 'package:tubes_pm/screen/splash3.dart';
 
 class SplashPage2 extends StatefulWidget {
@@ -77,12 +78,12 @@ class _SplashPage2State extends State<SplashPage2> {
                 backgroundColor: Color.fromRGBO(64, 138, 142, 1),
               ),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (context) => const SplashPage3(),
-                  ),
-                );
+                Navigator.push(context, PageTransition(
+                    child: const SplashPage3(),
+                    type: PageTransitionType.slideLeftFade,
+                    duration: Duration(milliseconds: 500),
+                    curve: Curves.easeOut,
+                ));
               },
               child: Text(
                 "Selanjutnya",

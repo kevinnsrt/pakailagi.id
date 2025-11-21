@@ -144,6 +144,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  smooth_transition:
+    dependency: "direct main"
+    description:
+      name: smooth_transition
+      sha256: c72e38a8b67a482deb960354e3c9456fec20c0a131dda9f5def6a40bec3c2cdf
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.7"
   source_span:
     dependency: transitive
     description:
