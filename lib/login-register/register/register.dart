@@ -17,7 +17,6 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _pass = TextEditingController();
   final TextEditingController _confirmPass = TextEditingController();
 
-  RegisterAuth auth = RegisterAuth();
 
   // late String _username ;
   // late String _mail;
@@ -218,23 +217,23 @@ class _RegisterPageState extends State<RegisterPage> {
                                 backgroundColor: Color.fromRGBO(62, 138, 142, 1),
                                 foregroundColor: Colors.white
                             ),onPressed: (){
-                              auth.username = _name.text;
-                              auth.email = _email.text;
-                              auth.password = _pass.text;
-                              auth.confirmPassword = _confirmPass.text;
+                              RegisterAuth.instance.username = _name.text;
+                              RegisterAuth.instance.email = _email.text;
+                              RegisterAuth.instance.password = _pass.text;
+                             RegisterAuth.instance.confirmPassword = _confirmPass.text;
 
-                              if(auth.username.isEmpty || auth.email.isEmpty || auth.password.isEmpty || auth.confirmPassword.isEmpty){
+                              if(RegisterAuth.instance.username.isEmpty || RegisterAuth.instance.email.isEmpty || RegisterAuth.instance.password.isEmpty || RegisterAuth.instance.confirmPassword.isEmpty){
                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Data tidak boleh kosong",
                                   style: TextStyle(color: AppColors.grayscale50,fontWeight: FontWeight.bold),),
                                   backgroundColor: AppColors.primary500,));
 
-                              } else if(auth.password != auth.confirmPassword){
+                              } else if(RegisterAuth.instance.password != RegisterAuth.instance.confirmPassword){
                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Password tidak sesuai",
                                     style: TextStyle(color: AppColors.grayscale50,fontWeight: FontWeight.bold),),
                                   backgroundColor: AppColors.primary500,));
                               }
                               else{
-                                auth.register1();
+                                RegisterAuth.instance.register1();
                                Navigator.push(context, PageTransition(
                                    child: const RegisterPage2(),
                                    type: PageTransitionType.fade,

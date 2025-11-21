@@ -1,26 +1,36 @@
 
-class RegisterAuth{
+import 'package:firebase_auth/firebase_auth.dart';
+
+class RegisterAuth {
+
+  // Singleton
+  static final RegisterAuth instance = RegisterAuth._internal();
+  RegisterAuth._internal();
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // register 1
-  late String username;
-  late String email;
-  late String password;
-  late String confirmPassword;
+  String username = "";
+  String email = "";
+  String password = "";
+  String confirmPassword = "";
 
   // register 2
-  late String number;
-  late String location;
+  String number = "";
+  String location = "";
 
-  register1(){
+  register1() {
     print(username);
     print(email);
     print(password);
     print(confirmPassword);
   }
 
-  register2(){
-    print(number);
-    print(location);
+  register2() async {
+    await _auth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    print("berhasil sign up");
   }
-
 }

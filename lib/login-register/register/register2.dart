@@ -13,7 +13,6 @@ class _RegisterPage2State extends State<RegisterPage2> {
   final TextEditingController _number = TextEditingController();
   final TextEditingController _location = TextEditingController();
 
-  RegisterAuth auth = RegisterAuth();
 
   // late String _username ;
   // late String _mail;
@@ -146,15 +145,15 @@ class _RegisterPage2State extends State<RegisterPage2> {
                                 backgroundColor: Color.fromRGBO(62, 138, 142, 1),
                                 foregroundColor: Colors.white
                             ),onPressed: (){
-                              auth.number = _number.text;
-                              auth.location = _location.text;
+                              RegisterAuth.instance.number = _number.text;
+                              RegisterAuth.instance.location = _location.text;
 
-                              if(auth.number.isEmpty || auth.location.isEmpty){
+                              if(RegisterAuth.instance.number.isEmpty || RegisterAuth.instance.location.isEmpty){
                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Data tidak boleh kosong",
                                   style: TextStyle(color: AppColors.grayscale50,fontWeight: FontWeight.bold),),
                                   backgroundColor: AppColors.primary500,));
                               }else{
-                                auth.register2();
+                                RegisterAuth.instance.register2();
                               }
                         }, child: Text("Selanjutnya",style: TextStyle(fontWeight: FontWeight.bold),)),
                       ),
