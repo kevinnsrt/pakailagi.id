@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_transition/smooth_transition.dart';
+import 'package:tubes_pm/colors/colors.dart';
 import 'package:tubes_pm/screen/splash2.dart';
 
 class SplashPage extends StatefulWidget {
@@ -13,7 +14,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color.fromRGBO(62, 138, 142, 1),
+      color: AppColors.grayscale50,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -27,10 +28,8 @@ class _SplashPageState extends State<SplashPage> {
                   curve: Curves.easeIn,
                 ));
               },
-              child: Image.asset("assets/logo.png"),
+              child: Image.asset("assets/logo.png",width: 197,height: 174,),
             ),
-            SizedBox(height: 37),
-            Image.asset("assets/pakailagi.id.png"),
           ],
         ),
       ),

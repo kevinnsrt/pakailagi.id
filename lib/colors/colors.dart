@@ -9,7 +9,7 @@ class AppColors{
   static const Color primary400 = Color.fromRGBO(88, 166, 169, 1);
   static const Color primary500 = Color.fromRGBO(62, 138, 142, 1);
   static const Color primary600 = Color.fromRGBO(48, 108, 113, 1);
-  static const Color primary700 = Color.fromRGBO(41, 88, 92, 100);
+  static const Color primary700 = Color.fromRGBO(41, 88, 92, 1);
   static const Color primary800 = Color.fromRGBO(37, 70, 74, 1);
   static const Color primary900 = Color.fromRGBO(34, 60, 63, 1);
   static const Color primary950 = Color.fromRGBO(15, 33, 36, 1);

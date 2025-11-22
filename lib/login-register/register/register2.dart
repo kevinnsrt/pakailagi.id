@@ -23,35 +23,29 @@ class _RegisterPage2State extends State<RegisterPage2> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          title: Text("Sign Up",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+        ),
     body: SingleChildScrollView(
       child: Center(
         child: SafeArea(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+
                 Container(
                   width: 358,
-                  height: 8,
-                  child: Row(
+                  height: 104,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     spacing: 8,
                     children: [
-                      Container(
-                        width: 175,
-                        height: 8,
-                        decoration: BoxDecoration(
-                            color: AppColors.primary500,
-                            borderRadius: BorderRadius.circular(12)
-                        ),
-                      ),
-
-                      Container(
-                        width: 175,
-                        height: 8,
-                        decoration: BoxDecoration(
-                            color: AppColors.primary500,
-                            borderRadius: BorderRadius.circular(12)
-                        ),
-                      ),
+                      Image.asset('assets/register_logo.png'),
+                      Text("Lengkapi Data",textAlign: TextAlign.start,
+                        style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold,color: AppColors.primary700),
+                      )
                     ],
                   ),
                 ),
@@ -61,27 +55,8 @@ class _RegisterPage2State extends State<RegisterPage2> {
                 ),
 
                 Container(
-                  width: 358,
-                  height: 104,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    spacing: 8,
-                    children: [
-                      Image.asset('assets/register_logo.png'),
-                      Text("Bergabunglah dengan Pakailagi.id untuk gaya yang lebih jauh!",textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 16),
-                      )
-                    ],
-                  ),
-                ),
-
-                SizedBox(
-                  height: 32,
-                ),
-
-                Container(
-                  width: 365,
-                  height: 344,
+                  width: 362,
+                  height: 198,
                   child: Column(
                     children: [
                       Column(
@@ -90,12 +65,11 @@ class _RegisterPage2State extends State<RegisterPage2> {
                           SizedBox(
                           width:355,
                             height: 20,
-                            child: Text("Nomor Telepon",style: TextStyle(color: AppColors.primary500),),
+                            child: Text("Nomor Telepon",style: TextStyle(color: AppColors.grayscale800,fontSize: 12),),
                           ),
                           TextField(
                             controller: _number,
                             decoration: InputDecoration(
-                              labelText: "Nomor Telepon",
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -103,7 +77,6 @@ class _RegisterPage2State extends State<RegisterPage2> {
                           ),
                         ],
                       ),
-
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         spacing: 8,
@@ -111,12 +84,11 @@ class _RegisterPage2State extends State<RegisterPage2> {
                           SizedBox(
                             width:355,
                             height: 20,
-                            child: Text("Lokasi",style: TextStyle(color: AppColors.primary500,)),
+                            child: Text("Lokasi",style: TextStyle(color: AppColors.grayscale800,fontSize: 12),),
                           ),
                           TextField(
                             controller: _location,
                             decoration: InputDecoration(
-                              labelText: "Lokasi",
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -124,89 +96,34 @@ class _RegisterPage2State extends State<RegisterPage2> {
                           ),
                         ],
                       ),
-
-                      SizedBox(height: 56,),
                     ],
                   ),
                 ),
 
-                SizedBox(height: 32,),
+
                 Container(
                   width: 362,
-                  height: 108,
-                  child: Column(
-                    spacing: 12,
-                    children: [
-                      SizedBox(
-                        width: 362,
-                        height: 48,
-                        child:  ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Color.fromRGBO(62, 138, 142, 1),
-                                foregroundColor: Colors.white
-                            ),onPressed: (){
-                              RegisterAuth.instance.number = _number.text;
-                              RegisterAuth.instance.location = _location.text;
+                  height: 48,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromRGBO(62, 138, 142, 1),
+                          foregroundColor: Colors.white
+                      ),onPressed: (){
+                    RegisterAuth.instance.number = _number.text;
+                    RegisterAuth.instance.location = _location.text;
 
-                              if(RegisterAuth.instance.number.isEmpty || RegisterAuth.instance.location.isEmpty){
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Data tidak boleh kosong",
-                                  style: TextStyle(color: AppColors.grayscale50,fontWeight: FontWeight.bold),),
-                                  backgroundColor: AppColors.primary500,));
-                              }else{
-                                RegisterAuth.instance.register2();
-                              }
-                        }, child: Text("Selanjutnya",style: TextStyle(fontWeight: FontWeight.bold),)),
-                      ),
-
-                      SizedBox(
-                        width: 362,
-                        height: 48,
-                        child:  ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color.fromRGBO(243, 244, 246, 1),
-                              foregroundColor: Color.fromRGBO(37, 70, 74, 1),
-                              elevation: 5,
-                            ),onPressed: (){
-                          Navigator.pop(context);
-                        },
-                            child: Text("Kembali",style: TextStyle(fontWeight: FontWeight.bold),)),
-                      ),
-                    ],
-                  ),
+                    if(RegisterAuth.instance.number.isEmpty || RegisterAuth.instance.location.isEmpty){
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Data tidak boleh kosong",
+                        style: TextStyle(color: AppColors.grayscale50,fontWeight: FontWeight.bold),),
+                        backgroundColor: AppColors.primary500,));
+                    }else{
+                      RegisterAuth.instance.register2();
+                    }
+                  }, child: Text("Selanjutnya",style: TextStyle(fontWeight: FontWeight.bold),)),
                 ),
 
                 SizedBox(height: 28,),
 
-                Container(
-                  width: 168,
-                  height: 93,
-                  child: Column(
-                    spacing: 10,
-                    children: [
-                      Text("atau lanjutkan dengan"),
-                      Container(
-                        width: 168,
-                        height: 60,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          spacing: 48,
-                          children: [
-                            GestureDetector(onTap: (){
-                              
-                            },
-                            child: Image.asset('assets/logo_google.png',width: 40,height: 40,),
-                            ),
-                            GestureDetector(onTap: (){
-
-                            },
-                              child: Image.asset('assets/logo_apple.png',width: 40,height: 40,),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ],
             )),
       ),

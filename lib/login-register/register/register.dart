@@ -17,16 +17,23 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _pass = TextEditingController();
   final TextEditingController _confirmPass = TextEditingController();
 
+  List<bool> toggleList = [true, true];
 
-  // late String _username ;
-  // late String _mail;
-  // late String _password;
-  // late String _confirmPassword;
+  void _toggle(int index) {
+    setState(() {
+      toggleList[index] = !toggleList[index];
+      // _isToggle = !_isToggle;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+    appBar: AppBar(
+      backgroundColor: Colors.white,
+      title: Text("Sign Up",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+    ),
     body: SingleChildScrollView(
       child: Center(
         child: SafeArea(
@@ -35,54 +42,22 @@ class _RegisterPageState extends State<RegisterPage> {
               children: [
                 Container(
                   width: 358,
-                  height: 8,
-                  child: Row(
-                    spacing: 8,
-                    children: [
-                      Container(
-                        width: 175,
-                        height: 8,
-                        decoration: BoxDecoration(
-                            color: AppColors.primary500,
-                            borderRadius: BorderRadius.circular(12)
-                        ),
-                      ),
-
-                      Container(
-                        width: 175,
-                        height: 8,
-                        decoration: BoxDecoration(
-                            color: Color.fromRGBO(156, 163, 172, 1),
-                            borderRadius: BorderRadius.circular(12)
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                SizedBox(
-                  height: 24,
-                ),
-
-                Container(
-                  width: 358,
                   height: 104,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     spacing: 8,
                     children: [
                       Image.asset('assets/register_logo.png'),
-                      Text("Bergabunglah dengan Pakailagi.id untuk gaya yang lebih jauh!",textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 16),
+                      Text("Buat Akun Baru",textAlign: TextAlign.start,
+                        style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold,color: AppColors.primary700),
                       )
                     ],
                   ),
                 ),
-
                 SizedBox(
-                  height: 32,
+                  height: 10,
                 ),
-
                 Container(
                   width: 365,
                   height: 344,
@@ -94,7 +69,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           SizedBox(
                           width:355,
                             height: 20,
-                            child: Text("Nama Lengkap",style: TextStyle(color: AppColors.primary500),),
+                            child: Text("Nama Lengkap",style: TextStyle(color: AppColors.grayscale800,fontSize: 12),),
                           ),
                           TextField(
                             controller: _name,
@@ -106,7 +81,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                               ),
                               floatingLabelBehavior: FloatingLabelBehavior.never,
-                              labelText: "Nama Lengkap Kamu",
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -122,7 +96,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           SizedBox(
                             width:355,
                             height: 20,
-                            child: Text("Email",style: TextStyle(color: AppColors.primary500,)),
+                            child: Text("Email",style: TextStyle(color: AppColors.grayscale800,fontSize: 12),),
                           ),
                           TextField(
                             controller: _email,
@@ -134,7 +108,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                               ),
                               floatingLabelBehavior: FloatingLabelBehavior.never,
-                              labelText: "Alamat Email Kamu",
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -149,12 +122,18 @@ class _RegisterPageState extends State<RegisterPage> {
                           SizedBox(
                             width:355,
                             height: 20,
-                            child: Text("Kata Sandi",style: TextStyle(color: AppColors.primary500,)),
+                            child: Text("Kata Sandi",style: TextStyle(color: AppColors.grayscale800,fontSize: 12),),
                           ),
                           TextField(
                             controller: _pass,
-                            obscureText: true,
+                            obscureText: toggleList[0],
                             decoration: InputDecoration(
+                              suffixIcon: GestureDetector(
+                                onTap: (){
+                                  _toggle(0);
+                                },
+                                child: Icon(toggleList[0] ? Icons.visibility_off : Icons.visibility,),
+                              ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide(
@@ -162,7 +141,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                               ),
                               floatingLabelBehavior: FloatingLabelBehavior.never,
-                              labelText: "Masukkan kata sandi",
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -177,12 +155,18 @@ class _RegisterPageState extends State<RegisterPage> {
                           SizedBox(
                             width:355,
                             height: 20,
-                            child: Text("Konfirmasi Kata Sandi",style: TextStyle(color: AppColors.primary500,)),
+                            child: Text("Konfirmasi Kata Sandi",style: TextStyle(color: AppColors.grayscale800,fontSize: 12),),
                           ),
                           TextField(
                             controller: _confirmPass,
-                            obscureText: true,
+                            obscureText: toggleList[1],
                             decoration: InputDecoration(
+                              suffixIcon: GestureDetector(
+                                onTap: (){
+                                  _toggle(1);
+                                },
+                                child: Icon(toggleList[1] ? Icons.visibility_off : Icons.visibility,),
+                              ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide(
@@ -190,7 +174,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                               ),
                               floatingLabelBehavior: FloatingLabelBehavior.never,
-                              labelText: "Konfirmasi Kata Sandi",
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -205,91 +188,52 @@ class _RegisterPageState extends State<RegisterPage> {
                 SizedBox(height: 32,),
                 Container(
                   width: 362,
-                  height: 108,
-                  child: Column(
-                    spacing: 12,
-                    children: [
-                      SizedBox(
-                        width: 362,
-                        height: 48,
-                        child:  ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Color.fromRGBO(62, 138, 142, 1),
-                                foregroundColor: Colors.white
-                            ),onPressed: (){
-                              RegisterAuth.instance.username = _name.text;
-                              RegisterAuth.instance.email = _email.text;
-                              RegisterAuth.instance.password = _pass.text;
-                             RegisterAuth.instance.confirmPassword = _confirmPass.text;
+                  height: 48,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromRGBO(62, 138, 142, 1),
+                          foregroundColor: Colors.white
+                      ),onPressed: (){
+                    RegisterAuth.instance.username = _name.text;
+                    RegisterAuth.instance.email = _email.text;
+                    RegisterAuth.instance.password = _pass.text;
+                    RegisterAuth.instance.confirmPassword = _confirmPass.text;
 
-                              if(RegisterAuth.instance.username.isEmpty || RegisterAuth.instance.email.isEmpty || RegisterAuth.instance.password.isEmpty || RegisterAuth.instance.confirmPassword.isEmpty){
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Data tidak boleh kosong",
-                                  style: TextStyle(color: AppColors.grayscale50,fontWeight: FontWeight.bold),),
-                                  backgroundColor: AppColors.primary500,));
+                    if(RegisterAuth.instance.username.isEmpty || RegisterAuth.instance.email.isEmpty || RegisterAuth.instance.password.isEmpty || RegisterAuth.instance.confirmPassword.isEmpty){
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Data tidak boleh kosong",
+                        style: TextStyle(color: AppColors.grayscale50,fontWeight: FontWeight.bold),),
+                        backgroundColor: AppColors.primary500,));
 
-                              } else if(RegisterAuth.instance.password != RegisterAuth.instance.confirmPassword){
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Password tidak sesuai",
-                                    style: TextStyle(color: AppColors.grayscale50,fontWeight: FontWeight.bold),),
-                                  backgroundColor: AppColors.primary500,));
-                              }
-                              else{
-                                RegisterAuth.instance.register1();
-                               Navigator.push(context, PageTransition(
-                                   child: const RegisterPage2(),
-                                   type: PageTransitionType.fade,
-                                   duration: Duration(milliseconds: 300),
-                                 curve: Curves.easeIn,
-                               ));
-                              }
-                        }, child: Text("Selanjutnya",style: TextStyle(fontWeight: FontWeight.bold),)),
-                      ),
-
-                      SizedBox(
-                        width: 362,
-                        height: 48,
-                        child:  ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color.fromRGBO(243, 244, 246, 1),
-                              foregroundColor: Color.fromRGBO(37, 70, 74, 1),
-                              elevation: 5,
-                            ),onPressed: (){
-                          Navigator.pop(context);
-                        },
-                            child: Text("Batal",style: TextStyle(fontWeight: FontWeight.bold),)),
-                      ),
-                    ],
-                  ),
+                    } else if(RegisterAuth.instance.password != RegisterAuth.instance.confirmPassword){
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Password tidak sesuai",
+                        style: TextStyle(color: AppColors.grayscale50,fontWeight: FontWeight.bold),),
+                        backgroundColor: AppColors.primary500,));
+                    }
+                    else{
+                      RegisterAuth.instance.register1();
+                      Navigator.push(context, PageTransition(
+                        child: const RegisterPage2(),
+                        type: PageTransitionType.fade,
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.easeIn,
+                      ));
+                    }
+                  }, child: Text("Selanjutnya",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),)),
                 ),
 
-                SizedBox(height: 28,),
+                SizedBox(
+                  height: 32,
+                ),
 
                 Container(
-                  width: 168,
-                  height: 93,
-                  child: Column(
-                    spacing: 10,
+                  width: 181,
+                  height: 20,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    spacing: 5,
                     children: [
-                      Text("atau lanjutkan dengan"),
-                      Container(
-                        width: 168,
-                        height: 60,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          spacing: 48,
-                          children: [
-                            GestureDetector(onTap: (){
-                              
-                            },
-                            child: Image.asset('assets/logo_google.png',width: 40,height: 40,),
-                            ),
-                            GestureDetector(onTap: (){
-
-                            },
-                              child: Image.asset('assets/logo_apple.png',width: 40,height: 40,),
-                            )
-                          ],
-                        ),
-                      ),
+                      Text("Sudah Punya Akun?"),
+                      Text("Sign In",style: TextStyle(color: AppColors.primary800,fontWeight: FontWeight.bold),),
                     ],
                   ),
                 ),

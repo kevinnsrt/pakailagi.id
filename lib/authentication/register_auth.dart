@@ -1,5 +1,6 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:tubes_pm/main.dart';
 
 class RegisterAuth {
 
@@ -32,5 +33,7 @@ class RegisterAuth {
       password: password,
     );
     print("berhasil sign up");
+
+    return const MyApp();
   }
 }

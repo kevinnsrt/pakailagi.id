@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_pm/screen/splash.dart';
+import 'package:tubes_pm/authentication/authGate.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 
@@ -19,9 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: const SplashPage()
-      ),
+      home: AuthGate(),
     );
   }
 }
