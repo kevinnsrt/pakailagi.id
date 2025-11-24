@@ -10,7 +10,7 @@ class ApiServiceRegister {
     required String token,
   }) async {
 
-    final url = Uri.parse("http://10.168.39.176/api/firebase-register");
+    final url = Uri.parse("http://172.20.10.5/api/firebase-register");
 
     final response = await http.post(
       url,
