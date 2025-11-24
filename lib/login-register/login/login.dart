@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_transition/smooth_transition.dart';
+import 'package:tubes_pm/login-register/login/login-form.dart';
 import 'package:tubes_pm/login-register/register/register.dart';
 
 class LoginPage extends StatefulWidget {
@@ -67,7 +68,11 @@ class _LoginPageState extends State<LoginPage> {
                      backgroundColor: Color.fromRGBO(62, 138, 142, 1),
                       foregroundColor: Colors.white
                     ),onPressed: (){
-
+                      Navigator.push(context, PageTransition(child: const LoginForm(),
+                          type: PageTransitionType.fade,
+                          duration: Duration(milliseconds: 250),
+                          curve: Curves.easeIn,
+                      ));
                     }, child: Text("Masuk",style: TextStyle(fontWeight: FontWeight.bold),)),
                   ),
 
