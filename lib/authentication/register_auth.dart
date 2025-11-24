@@ -1,6 +1,8 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:tubes_pm/main.dart';
+import 'package:tubes_pm/authentication/api_service_register.dart';
+import 'package:tubes_pm/authentication/api_service_register.dart';
+import 'package:tubes_pm/authentication/authGate.dart';
 
 class RegisterAuth {
 
@@ -28,12 +30,32 @@ class RegisterAuth {
   }
 
   register2() async {
-    await _auth.createUserWithEmailAndPassword(
+    final cred = await _auth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
     print("berhasil sign up");
 
-    return const MyApp();
+    final user = cred.user;
+
+
+    if (user != null) {
+      final token = await user.getIdToken();
+
+      if (token == null) {
+        throw Exception("Gagal mengambil Firebase ID Token");
+      }
+
+      await ApiServiceRegister.registerToBackend(
+        uid: user.uid,
+        username: username,
+        number: number,
+        location: location,
+        token: token.toString(),
+      );
+    }
+
+    return AuthGate();
   }
+
 }

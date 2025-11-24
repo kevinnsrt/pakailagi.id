@@ -19,6 +19,7 @@ class _AuthGateState extends State<AuthGate> {
           return const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasData) {
+          // ApiServiceLogin();
           return const HomePage();
         }
         return const SplashPage();
