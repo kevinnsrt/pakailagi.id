@@ -54,6 +54,9 @@ class _HomePageState extends State<HomePage> {
             ),
 
             GestureDetector(
+              onTap: (){
+
+              },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,

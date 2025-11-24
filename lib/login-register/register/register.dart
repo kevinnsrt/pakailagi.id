@@ -64,10 +64,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: Column(
                     children: [
                       Column(
-                        spacing: 8,
+                        spacing: 10,
                         children: [
                           SizedBox(
-                          width:355,
+                          width:360,
                             height: 20,
                             child: Text("Nama Lengkap",style: TextStyle(color: AppColors.grayscale800,fontSize: 12),),
                           ),
