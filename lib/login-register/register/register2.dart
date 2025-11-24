@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_pm/authentication/authGate.dart';
 import 'package:tubes_pm/authentication/register_auth.dart';
 import 'package:tubes_pm/colors/colors.dart';
 
@@ -117,7 +118,7 @@ class _RegisterPage2State extends State<RegisterPage2> {
                         style: TextStyle(color: AppColors.grayscale50,fontWeight: FontWeight.bold),),
                         backgroundColor: AppColors.primary500,));
                     }else{
-                      RegisterAuth.instance.register2();
+                      RegisterAuth.instance.register2(context);
                     }
                   }, child: Text("Selanjutnya",style: TextStyle(fontWeight: FontWeight.bold),)),
                 ),
