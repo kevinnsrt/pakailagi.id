@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:smooth_transition/smooth_transition.dart';
 import 'package:tubes_pm/colors/colors.dart';
 import 'package:tubes_pm/dashboard/home2.dart';
 import 'package:tubes_pm/dashboard/profile.dart';
+import 'package:tubes_pm/dashboard/shop.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,7 +19,8 @@ class _HomePageState extends State<HomePage> {
 
   final List<Widget> _screen = [
     HomePage2(),
-    ProfilePage()
+    ProfilePage(),
+    ShopPage(),
   ];
 
   void _onTapped (int index){
@@ -52,7 +55,7 @@ class _HomePageState extends State<HomePage> {
 
             GestureDetector(
               onTap: (){
-
+                _onTapped(2);
               },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

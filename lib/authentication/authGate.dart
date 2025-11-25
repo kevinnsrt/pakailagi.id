@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_pm/dashboard/home.dart';
+import 'package:tubes_pm/dashboard/bottom-navbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tubes_pm/screen/splash.dart';
 class AuthGate extends StatefulWidget {
