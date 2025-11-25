@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:tubes_pm/api/user-data.dart';
 import 'package:tubes_pm/colors/colors.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -11,10 +12,29 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
 
+
   Future<void> _signOut() async {
     await FirebaseAuth.instance.signOut();
   }
+
+  Map<String, dynamic>? userData;
+  Future<void> userdata() async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final data = await ApiServiceLogin.loginWithUid(uid: user.uid);
+      setState(() {
+        userData = data;
+        print(data);
+      });
+    }
+  }
   @override
+
+  void initState() {
+    super.initState();
+    userdata();
+  }
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -47,7 +67,27 @@ class _ProfilePageState extends State<ProfilePage> {
                                 height: 64,
                                 child: CircleAvatar(),
                               ),
-                              Text("Andreas",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: AppColors.grayscale950),),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    userData?["name"] ?? "Loading...",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.grayscale950
+                                    ),
+                                  ),
+                                  Text(
+                                    userData?["number"] ?? "Loading...",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        color: AppColors.grayscale950
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
 
