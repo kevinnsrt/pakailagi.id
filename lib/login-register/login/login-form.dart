@@ -14,6 +14,15 @@ class _LoginFormState extends State<LoginForm> {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _pass = TextEditingController();
 
+  List<bool> toggleList = [true];
+
+  void _toggle(int index) {
+    setState(() {
+      toggleList[index] = !toggleList[index];
+      // _isToggle = !_isToggle;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,11 +73,13 @@ class _LoginFormState extends State<LoginForm> {
                           TextField(
                             controller: _email,
                             decoration: InputDecoration(
+
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide(
                                     color: AppColors.primary500
                                 ),
+
                               ),
                               floatingLabelBehavior: FloatingLabelBehavior.never,
                               border: OutlineInputBorder(
@@ -90,7 +101,14 @@ class _LoginFormState extends State<LoginForm> {
                           ),
                           TextField(
                             controller: _pass,
+                            obscureText: toggleList[0],
                             decoration: InputDecoration(
+                              suffixIcon:  GestureDetector(
+                                onTap: (){
+                                  _toggle(0);
+                                },
+                                child: Icon(toggleList[0] ? Icons.visibility_off : Icons.visibility,),
+                              ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide(

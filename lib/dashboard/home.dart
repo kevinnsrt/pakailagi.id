@@ -13,9 +13,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  Future<void> _signOut() async {
-    await FirebaseAuth.instance.signOut();
-  }
   int _selectedIndex = 0;
 
   final List<Widget> _screen = [
@@ -55,7 +52,7 @@ class _HomePageState extends State<HomePage> {
 
             GestureDetector(
               onTap: (){
-              _signOut();
+
               },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

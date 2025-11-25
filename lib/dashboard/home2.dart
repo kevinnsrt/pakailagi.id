@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_pm/colors/colors.dart';
+import 'package:tubes_pm/dashboard/items/beranda.dart';
 
 class HomePage2 extends StatefulWidget {
   const HomePage2({super.key});
@@ -12,6 +13,7 @@ class _HomePage2State extends State<HomePage2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -60,7 +62,94 @@ class _HomePage2State extends State<HomePage2> {
                 ],
               ),
 
-            )
+            ),
+
+            SizedBox(
+              height: 32,
+            ),
+           Container(width: 361,
+             height: 570,
+             child:  ListView(
+               scrollDirection: Axis.vertical,
+               children: [
+                 Container(
+                   width: 361,
+                   height: 122,
+                   child: Image.asset('assets/beranda_banner.png'),
+                 ),
+                 SizedBox(
+                   width: 24,
+                 ),
+                 Container(
+                   width: 361,
+                   child: Column(
+                     spacing: 12,
+                     children: [
+
+                       SizedBox(
+                         height: 24,
+                       ),
+
+                       Container(
+                           width: 361,
+                           height: 20,
+                           child: Row(
+                             mainAxisAlignment: MainAxisAlignment.start,
+                             children: [
+                               SizedBox(
+                                 width: 24,
+                               ),
+                               Text("Rekomendasi Produk",style: TextStyle(color: AppColors.primary800,fontWeight: FontWeight.bold
+                                   ,fontSize: 14),),
+
+                               SizedBox(
+                                 width: 160,
+                               ),
+
+                               Icon(Icons.arrow_forward_ios_outlined,color: AppColors.grayscale400,)
+                             ],
+                           )
+                       ),
+
+                       // dynamic barang
+                       Container(
+                         width: 361,
+                         height: 238,
+                         child: ItemBeranda(),
+                       ),
+
+                       Container(
+                           width: 361,
+                           height: 20,
+                           child: Row(
+                             mainAxisAlignment: MainAxisAlignment.start,
+                             children: [
+                               SizedBox(
+                                 width: 24,
+                               ),
+                               Text("Produk Terbaru",style: TextStyle(color: AppColors.primary800,fontWeight: FontWeight.bold
+                                   ,fontSize: 14),),
+
+                               SizedBox(
+                                 width: 200,
+                               ),
+
+                               Icon(Icons.arrow_forward_ios_outlined,color: AppColors.grayscale400,)
+                             ],
+                           )
+                       ),
+
+                       Container(
+                         width: 361,
+                         height: 238,
+                         child: ItemBeranda(),
+                       ),
+
+                     ],
+                   ),
+                 )
+               ],
+             ),)
           ],
         )
       ),

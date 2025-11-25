@@ -18,7 +18,7 @@ class AppColors{
   static const Color grayscale50 = Color.fromRGBO(249,250, 251, 1);
   static const Color grayscale100 = Color.fromRGBO(243,244,246 , 1);
   static const Color grayscale200 = Color.fromRGBO(229,231, 235, 1);
-  static const Color grayscale300 = Color.fromRGBO(209,214, 291, 1);
+  static const Color grayscale300 = Color.fromRGBO(209,214, 219, 1);
   static const Color grayscale400 = Color.fromRGBO(156,163, 175, 1);
   static const Color grayscale500 = Color.fromRGBO(107,114, 128, 1);
   static const Color grayscale600 = Color.fromRGBO(75,85, 99, 1);
