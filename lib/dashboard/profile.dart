@@ -54,6 +54,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       height: 20,
                     ),
                     Container(
+                      width: 393,
                       height: 74,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -65,7 +66,9 @@ class _ProfilePageState extends State<ProfilePage> {
                               SizedBox(
                                 width: 64,
                                 height: 64,
-                                child: CircleAvatar(),
+                                child: CircleAvatar(
+                                  child: Icon(Icons.person,size: 32,),
+                                ),
                               ),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -83,7 +86,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     userData?["number"] ?? "Loading...",
                                     style: TextStyle(
                                         fontSize: 12,
-                                        color: AppColors.grayscale950
+                                        color: AppColors.primary800
                                     ),
                                   ),
                                 ],

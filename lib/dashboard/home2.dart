@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:tubes_pm/api/user-data.dart';
 import 'package:tubes_pm/colors/colors.dart';
 import 'package:tubes_pm/dashboard/items/beranda.dart';
 
@@ -10,7 +12,23 @@ class HomePage2 extends StatefulWidget {
 }
 
 class _HomePage2State extends State<HomePage2> {
+  Map<String, dynamic>? userData;
+  Future<void> userdata() async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final data = await ApiServiceLogin.loginWithUid(uid: user.uid);
+      setState(() {
+        userData = data;
+        print(data);
+      });
+    }
+  }
   @override
+  void initState() {
+    super.initState();
+    userdata();
+  }
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -44,7 +62,8 @@ class _HomePage2State extends State<HomePage2> {
                         SizedBox(
                           width:125,
                           height: 30,
-                          child: ElevatedButton(onPressed: (){}, child: Text("Kota Medan",style: TextStyle(color: AppColors.grayscale700),)),
+                          child: ElevatedButton(onPressed: (){}, child:
+                          Text(userData?["location"] ?? "Loading...",style: TextStyle(color: AppColors.grayscale700),)),
                         ),
                         SizedBox(
                           width: 30,
