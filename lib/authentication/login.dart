@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tubes_pm/api/user-data.dart';
 import 'package:tubes_pm/authentication/authGate.dart';
+import 'package:tubes_pm/authentication/token.dart';
 
 class LoginAuth {
   // Singleton
@@ -21,7 +22,7 @@ class LoginAuth {
        email: email, password: password);
     print("berhasil login");
 
-
+   await UserToken().getToken();
 
    Navigator.pushReplacement(
      context,

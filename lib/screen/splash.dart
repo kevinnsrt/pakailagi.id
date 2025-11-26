@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:smooth_transition/smooth_transition.dart';
 import 'package:tubes_pm/colors/colors.dart';
@@ -11,6 +13,22 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+
+  @override
+  void _navigateToNextScreen(){
+    Navigator.pushReplacement(context, PageTransition(type: PageTransitionType.fade,
+        curve: Curves.easeIn,
+        child: SplashPage2(),duration: Duration(milliseconds: 300,) ));
+  }
+  @override
+  void initState(){
+    super.initState();
+    Timer(
+      Duration(milliseconds: 2500),
+      _navigateToNextScreen,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,17 +37,7 @@ class _SplashPageState extends State<SplashPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.push(context, PageTransition(
-                  child: const SplashPage2(),
-                  type: PageTransitionType.scaleFade,
-                  duration: const Duration(milliseconds: 500),
-                  curve: Curves.easeIn,
-                ));
-              },
-              child: Image.asset("assets/logo.png",width: 197,height: 174,),
-            ),
+            Image.asset("assets/logo.png",width: 197,height: 174,),
           ],
         ),
       ),

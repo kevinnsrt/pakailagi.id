@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:smooth_transition/smooth_transition.dart';
+import 'package:tubes_pm/authentication/token.dart';
 import 'package:tubes_pm/colors/colors.dart';
 import 'package:tubes_pm/dashboard/home2.dart';
 import 'package:tubes_pm/dashboard/profile.dart';
@@ -54,7 +55,8 @@ class _HomePageState extends State<HomePage> {
             ),
 
             GestureDetector(
-              onTap: (){
+              onTap: () async{
+                await UserToken().getToken();
                 _onTapped(2);
               },
                 child: Column(

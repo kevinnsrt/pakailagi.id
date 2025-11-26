@@ -39,8 +39,6 @@ class RegisterAuth {
     print("berhasil sign up");
 
     final user = cred.user;
-
-
     if (user != null) {
       final token = await user.getIdToken();
 
