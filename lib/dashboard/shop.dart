@@ -132,7 +132,6 @@ class _ShopPageState extends State<ShopPage> {
                     ),
                     itemBuilder: (context, index) {
                       final item = items[index];
-
                       return GestureDetector(
                         onTap: () {},
                         child: Container(
@@ -226,7 +225,7 @@ class _ShopPageState extends State<ShopPage> {
 
   Widget _categoryButton(String label) {
     return SizedBox(
-      width: 100,
+      width: 116,
       height: 36,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(

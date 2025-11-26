@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 class GetAllItems{
 
   get () async {
-    final url = Uri.parse("http://172.20.10.5:8000/api/products");
+    final url = Uri.parse("https://pakailagi.user.cloudjkt02.com/api/products");
 
     final response = await http.get(url);
 

@@ -6,7 +6,7 @@ class ApiServiceLogin {
     required String uid,
   }) async {
 
-    final url = Uri.parse("http://172.20.10.5:8000/api/login");
+    final url = Uri.parse("https://pakailagi.user.cloudjkt02.com/api/login");
 
     final response = await http.post(
       url,
