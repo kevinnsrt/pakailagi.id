@@ -32,13 +32,7 @@ Menggunakan lokasi pengguna untuk menampilkan penjual atau pembeli terdekat, seh
 ### 4. User Profile
 Menampilkan informasi pengguna, daftar barang yang dijual, serta riwayat transaksi.
 
-### 5. Camera Integration
-Untuk memfasilitasi penjualan agar dapat mengunggah foto pakaian
-
-### 6. Chat System
-Menyediakan obrolan peer-to-peer antara penjual dan pembeli demi keamanan dan kenyamanan transaksi
-
-### 7. Data Storage (REST API & Firebase)
+### 5. Data Storage (REST API & Firebase)
 Menyimpan seluruh data pengguna, transaksi, dan media secara aman melalui integrasi REST API dan Firebase, menjamin ketersediaan serta konsistensi data di seluruh platform.
 
 ---
@@ -72,4 +66,3 @@ password = pakailagi.id
 **Login Page**
 ![Login Page](assets/screenshots/login.png)
 
-**KLIK LOGO PADA SPLASH SCREEN UNTUK BERPINDAH KE SCREEN SELAJUTNYA**
