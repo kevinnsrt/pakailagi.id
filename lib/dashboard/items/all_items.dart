@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_pm/api/get-all-items.dart';
 import 'package:tubes_pm/colors/colors.dart';
+import 'package:tubes_pm/dashboard/detail/detail.dart';
 
 class AllItemsPage extends StatefulWidget {
   const AllItemsPage({super.key});
@@ -43,7 +44,9 @@ class _AllItemsPageState extends State<AllItemsPage> {
         itemBuilder: (context, index) {
           final item = items[index];
           return GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> DetailPage()));
+            },
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(6),

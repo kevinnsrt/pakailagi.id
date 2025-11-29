@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:smooth_transition/smooth_transition.dart';
 import 'package:tubes_pm/authentication/token.dart';
 import 'package:tubes_pm/colors/colors.dart';
+import 'package:tubes_pm/dashboard/history/history.dart';
 import 'package:tubes_pm/dashboard/home2.dart';
 import 'package:tubes_pm/dashboard/profile.dart';
 import 'package:tubes_pm/dashboard/shop.dart';
@@ -22,6 +23,7 @@ class _HomePageState extends State<HomePage> {
     HomePage2(),
     ProfilePage(),
     ShopPage(),
+    HistoryPage(),
   ];
 
   void _onTapped (int index){
@@ -70,6 +72,9 @@ class _HomePageState extends State<HomePage> {
             ),
 
             GestureDetector(
+              onTap: (){
+               _onTapped(3);
+              },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,

@@ -38,42 +38,18 @@ class _ShopPageState extends State<ShopPage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text("Belanja"),
+        actions: [
+          Icon(Icons.favorite_border_outlined),
+          SizedBox(width: 12,)
+        ],
+      ),
       body: SafeArea(
         child: Column(
           children: [
             // top bar
-            Container(
-              width: 361,
-              height: 35,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                spacing: 120,
-                children: [
-                  Text(
-                    "Belanja",
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.grayscale900,
-                    ),
-                  ),
-                  Container(
-                    width: 155,
-                    height: 35,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Icon(
-                          Icons.favorite_border_outlined,
-                          color: AppColors.primary700,
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            
 
             SizedBox(height: 12),
 

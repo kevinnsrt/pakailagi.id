@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tubes_pm/authentication/token.dart';
 import 'package:tubes_pm/colors/colors.dart';
 import 'package:http/http.dart' as http;
+import 'package:tubes_pm/dashboard/detail/detail.dart';
 
 class FilterPage extends StatefulWidget {
   final String value; // required value (kategori)
@@ -75,7 +76,9 @@ class _FilterPageState extends State<FilterPage> {
           itemBuilder: (context, index) {
             final item = items[index];
             return GestureDetector(
-              onTap: () {},
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>DetailPage()));
+              },
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(6),

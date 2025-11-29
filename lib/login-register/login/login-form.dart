@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_pm/authentication/authGate.dart';
+import 'package:tubes_pm/authentication/google_sign_in.dart';
 import 'package:tubes_pm/authentication/login.dart';
 import 'package:tubes_pm/colors/colors.dart';
 
@@ -208,6 +210,16 @@ class _LoginFormState extends State<LoginForm> {
                     spacing: 20,
                     children: [
                       GestureDetector(
+                      onTap:() async{
+                        var userCredential = await GoogleSignInService().signInWithGoogle();
+                        if (userCredential != null){
+                          print(userCredential.user!.email);
+                          print(userCredential.user!.uid);
+                          print(userCredential.user!.displayName);
+
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>AuthGate()));
+                        }
+                      },
                         child: Image.asset('assets/google.png'),
                       ),
 
