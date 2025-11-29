@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_pm/colors/colors.dart';
 
-class DetailPage extends StatelessWidget {
-  const DetailPage({super.key});
+class DetailPage extends StatefulWidget {
+  final String product_id;
+  const DetailPage({super.key, required this.product_id});
 
   @override
+  State<DetailPage> createState() => _DetailPageState();
+}
+
+class _DetailPageState extends State<DetailPage> {
+  @override
   Widget build(BuildContext context) {
+    print("PRODUCT ID: ${widget.product_id}");
     return Scaffold(
       appBar: AppBar(
         title: Text("Detail Produk",style: TextStyle(fontWeight: FontWeight.bold),),

@@ -49,10 +49,7 @@ class _ShopPageState extends State<ShopPage> {
         child: Column(
           children: [
             // top bar
-            
-
             SizedBox(height: 12),
-
             // ===== SEARCH BAR =====
             Container(
               width: 361,
