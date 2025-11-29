@@ -8,7 +8,7 @@ class DetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Detail Produk"),
+        title: Text("Detail Produk",style: TextStyle(fontWeight: FontWeight.bold),),
       ),
       body: SafeArea(child: Expanded(
 

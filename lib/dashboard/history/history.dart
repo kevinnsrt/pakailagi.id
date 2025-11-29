@@ -8,7 +8,7 @@ class HistoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("History"),
+        title: Text("History",style: TextStyle(fontWeight: FontWeight.bold),),
       ),
       body: SafeArea(child: Center(
         child: Column(

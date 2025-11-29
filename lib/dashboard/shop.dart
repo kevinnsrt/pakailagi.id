@@ -39,7 +39,7 @@ class _ShopPageState extends State<ShopPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("Belanja"),
+        title: Text("Belanja",style: TextStyle(fontWeight: FontWeight.bold),),
         actions: [
           Icon(Icons.favorite_border_outlined),
           SizedBox(width: 12,)
