@@ -1,96 +1,84 @@
-import 'package:flutter/material.dart';
-import 'package:tubes_pm/colors/colors.dart';
 
-class HistoryPage extends StatelessWidget {
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:tubes_pm/api/get_user_cart.dart';
+import 'package:tubes_pm/colors/colors.dart';
+import 'package:tubes_pm/dashboard/history/all.dart';
+
+class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
 
   @override
+  State<HistoryPage> createState() => _HistoryPageState();
+}
+
+class _HistoryPageState extends State<HistoryPage> {
+  // Future<void> allusercart() async{
+  //   final FirebaseAuth _auth = FirebaseAuth.instance;
+  //   final user = FirebaseAuth.instance.currentUser;
+  //
+  //   if(user != null){
+  //     final data = await GetUserCart.getusercart(uid: user.uid);
+  //   }
+  //
+  // }
+  @override
+
+  int _selectedIndex = 0;
+
+  final List<Widget> _screen = [
+    CartAll(),
+  ];
+
+  void _onTapped (int index){
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("History"),
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+        title: Text("Histori",style: TextStyle(fontWeight: FontWeight.bold),),
       ),
       body: SafeArea(child: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
-          spacing: 12,
           children: [
-            //   container status
             Container(
               width: 347,
               height: 24,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                spacing: 28,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  InkWell(
-                    onTap: (){
-
-                    },
-                    child: Text("Semua",style: TextStyle(
-                        color: AppColors.grayscale950,
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal
-                    ),),
-                  ),
-
-                  InkWell(
-                    onTap: (){
-
-                    },
-                    child: Text("Diproses",style: TextStyle(
-                        color: AppColors.grayscale950,
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal
-                    ),),
-                  ),
-
-                  InkWell(
-                    onTap: (){
-
-                    },
-                    child: Text("Selesai",style: TextStyle(
-                        color: AppColors.grayscale950,
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal
-                    ),),
-                  ),
-
-                  InkWell(
-                    onTap: (){
-
-                    },
-                    child: Text("Dibatalkan",style: TextStyle(
-                        color: AppColors.grayscale950,
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal
-                    ),),
-                  )
+                 InkWell(
+                   onTap: (){
+                     _onTapped(0);
+                   },
+                   child:  Text("Semua",style: TextStyle(color: AppColors.grayscale950,fontWeight: FontWeight.bold,fontSize: 16),),
+                 ),
+                  Text("Diproses",style: TextStyle(color: AppColors.grayscale950,fontWeight: FontWeight.bold,fontSize: 16),),
+                  Text("Selesai",style: TextStyle(color: AppColors.grayscale950,fontWeight: FontWeight.bold,fontSize: 16),),
+                  Text("Dibatalkan",style: TextStyle(color: AppColors.grayscale950,fontWeight: FontWeight.bold,fontSize: 16),),
                 ],
               ),
             ),
 
-          //   container item
-            Container(
-              width: 352,
-              height: 154,
-              color: Colors.blue,
+            SizedBox(
+              height: 24,
             ),
 
-            Container(
-              width: 352,
-              height: 154,
-              color: Colors.yellow,
-            ),
-
-            Container(
-              width: 352,
-              height: 154,
-              color: Colors.green,
-            ),
+            Expanded(child: IndexedStack(
+              index: _selectedIndex,
+              children: _screen,
+            ),)
           ],
-        )),
-      )
+        ),
+      )),
     );
   }
 }

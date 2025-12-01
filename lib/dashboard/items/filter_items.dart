@@ -61,7 +61,8 @@ class _FilterPageState extends State<FilterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: RefreshIndicator(
+      backgroundColor: Colors.white,
+      body: SafeArea(child: RefreshIndicator(
         onRefresh: fetchItems,
         child: items == null
             ? Center(child: CircularProgressIndicator())
@@ -77,7 +78,7 @@ class _FilterPageState extends State<FilterPage> {
             final item = items[index];
             return GestureDetector(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>DetailPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>DetailPage(product_id: item['id'].toString())));
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -153,7 +154,7 @@ class _FilterPageState extends State<FilterPage> {
             );
           },
         ),
-      ),
+      ),)
     );
   }
 }
