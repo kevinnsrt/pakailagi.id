@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_pm/authentication/api_service_register.dart';
 import 'package:tubes_pm/authentication/authGate.dart';
 import 'package:tubes_pm/authentication/google_sign_in.dart';
 import 'package:tubes_pm/authentication/login.dart';
@@ -215,7 +216,11 @@ class _LoginFormState extends State<LoginForm> {
                         if (userCredential != null){
                           print(userCredential.user!.email);
                           print(userCredential.user!.uid);
-                          print(userCredential.user!.displayName);
+                          print(userCredential.user!.displayName)
+                          ;
+                          final token = await userCredential.user!.getIdToken();
+
+                          await ApiServiceRegister.registerGooogle(uid: userCredential.user!.uid, username: userCredential.user!.displayName.toString(), number: "null", location: "null", token: token.toString(),);
 
                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>AuthGate()));
                         }
