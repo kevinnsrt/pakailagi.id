@@ -11,8 +11,7 @@ class CartAll extends StatefulWidget {
 
 class _CartAllState extends State<CartAll> {
   List<dynamic>? items;
-  bool selectAll = false;
-  List<bool> selectedItems = [];
+  Set<int> selectedIds = {};
 
   @override
   void initState() {
@@ -26,9 +25,11 @@ class _CartAllState extends State<CartAll> {
 
     setState(() {
       items = result;
-      selectedItems = List<bool>.filled(items!.length, false);
+      selectedIds.clear();
     });
   }
+
+  bool get selectAll => items != null && items!.every((item) => selectedIds.contains(item['id']));
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +51,12 @@ class _CartAllState extends State<CartAll> {
                 value: selectAll,
                 onChanged: (value) {
                   setState(() {
-                    selectAll = value!;
-                    selectedItems = List<bool>.filled(items!.length, selectAll);
+                    if (value == true) {
+                      selectedIds = items!.map<int>((item) => item['id']).toSet();
+                    } else {
+                      selectedIds.clear();
+                    }
+                    print("Selected IDs: $selectedIds"); // <-- debug di sini
                   });
                 },
               ),
@@ -108,12 +113,15 @@ class _CartAllState extends State<CartAll> {
                         children: [
                           // Checkbox Item
                           Checkbox(
-                            value: selectedItems[index],
+                            value: selectedIds.contains(item['id']),
                             onChanged: (value) {
                               setState(() {
-                                selectedItems[index] = value!;
-                                selectAll =
-                                    selectedItems.every((element) => element);
+                                if (value == true) {
+                                  selectedIds.add(item['id']);
+                                } else {
+                                  selectedIds.remove(item['id']);
+                                }
+                                print("Selected IDs: $selectedIds");
                               });
                             },
                           ),
