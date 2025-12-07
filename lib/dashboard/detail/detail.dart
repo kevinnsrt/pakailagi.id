@@ -1,6 +1,13 @@
+import 'dart:convert';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tubes_pm/api/get_details_product.dart';
+import 'package:tubes_pm/authentication/token.dart';
 import 'package:tubes_pm/colors/colors.dart';
+import 'package:http/http.dart' as http;
+import 'package:tubes_pm/dashboard/bottom-navbar.dart';
+import 'package:tubes_pm/dashboard/history/history.dart';
 
 class DetailPage extends StatefulWidget {
   final String product_id;
@@ -35,6 +42,27 @@ class _DetailPageState extends State<DetailPage> {
     setState(() {
       detailProducts = data;
     });
+  }
+  
+  Future<void> sendToCart() async{
+    final cred = await FirebaseAuth.instance.currentUser;
+    final uid = cred!.uid.toString();
+    final token = UserToken().getToken().toString();
+    
+    final url = Uri.parse("https://pakailagi.user.cloudjkt02.com/api/carts");
+
+    final response = await http.post(url,
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token",
+    },
+      body: jsonEncode({
+        "uid": uid,
+        "product_id": widget.product_id
+      })
+    );
+
+    print(response.body);
   }
 
   @override
@@ -191,7 +219,10 @@ class _DetailPageState extends State<DetailPage> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () async{
+                  await sendToCart();
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> HomePage(selectedIndex: 3,)));
+                },
                 child: Text(
                   "Beli",
                   style: TextStyle(

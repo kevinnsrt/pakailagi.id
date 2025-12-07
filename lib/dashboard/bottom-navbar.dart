@@ -9,7 +9,8 @@ import 'package:tubes_pm/dashboard/profile.dart';
 import 'package:tubes_pm/dashboard/shop.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final int selectedIndex;
+  const HomePage({super.key, this.selectedIndex = 0});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -25,6 +26,12 @@ class _HomePageState extends State<HomePage> {
     ShopPage(),
     HistoryPage(),
   ];
+
+  @override
+  void initState(){
+    super.initState();
+    _selectedIndex = widget.selectedIndex;
+  }
 
   void _onTapped (int index){
     setState(() {
