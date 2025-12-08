@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:tubes_pm/api/get_user_cart.dart';
 import 'package:tubes_pm/colors/colors.dart';
 import 'package:tubes_pm/dashboard/history/all.dart';
+import 'package:tubes_pm/dashboard/history/proses.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
@@ -28,6 +29,7 @@ class _HistoryPageState extends State<HistoryPage> {
 
   final List<Widget> _screen = [
     CartAll(),
+    ProsesCart(),
   ];
 
   void _onTapped (int index){
@@ -59,9 +61,14 @@ class _HistoryPageState extends State<HistoryPage> {
                    onTap: (){
                      _onTapped(0);
                    },
-                   child:  Text("Semua",style: TextStyle(color: AppColors.grayscale950,fontWeight: FontWeight.bold,fontSize: 16),),
+                   child:  Text("Dikeranjang",style: TextStyle(color: AppColors.grayscale950,fontWeight: FontWeight.bold,fontSize: 16),),
                  ),
-                  Text("Diproses",style: TextStyle(color: AppColors.grayscale950,fontWeight: FontWeight.bold,fontSize: 16),),
+                  InkWell(
+                    onTap: (){
+                      _onTapped(1);
+                    },
+                    child: Text("Diproses",style: TextStyle(color: AppColors.grayscale950,fontWeight: FontWeight.bold,fontSize: 16),),
+                  ),
                   Text("Selesai",style: TextStyle(color: AppColors.grayscale950,fontWeight: FontWeight.bold,fontSize: 16),),
                   Text("Dibatalkan",style: TextStyle(color: AppColors.grayscale950,fontWeight: FontWeight.bold,fontSize: 16),),
                 ],
