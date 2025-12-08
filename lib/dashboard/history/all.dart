@@ -87,106 +87,104 @@ class _CartAllState extends State<CartAll> {
           ),
 
           Expanded(
-              child: RefreshIndicator(onRefresh: fetchItems,
-                child: ListView.builder(
-                  itemCount: items!.length,
-                  itemBuilder: (context, index) {
-                    final item = items![index];
-                    final product = item['product'];
+              child: ListView.builder(
+                itemCount: items!.length,
+                itemBuilder: (context, index) {
+                  final item = items![index];
+                  final product = item['product'];
 
-                    return Container(
-                      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 4,
-                            offset: Offset(0, 2),
-                          )
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          // Status
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 4),
-                                decoration: BoxDecoration(
-                                  color: AppColors.primary600,
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                child: Text(
-                                  item['status'],
-                                  style: const TextStyle(color: Colors.white),
-                                ),
-                              )
-                            ],
-                          ),
-
-                          const SizedBox(height: 8),
-
-                          // Item Row
-                          Row(
-                            children: [
-                              // Checkbox Item
-                              Checkbox(
-                                value: selectedIds.contains(item['id']),
-                                onChanged: (value) {
-                                  setState(() {
-                                    if (value == true) {
-                                      selectedIds.add(item['id']);
-                                    } else {
-                                      selectedIds.remove(item['id']);
-                                    }
-                                    print("Selected IDs: $selectedIds");
-                                  });
-                                },
+                  return Container(
+                    margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 4,
+                          offset: Offset(0, 2),
+                        )
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        // Status
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: AppColors.primary600,
+                                borderRadius: BorderRadius.circular(6),
                               ),
+                              child: Text(
+                                item['status'],
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            )
+                          ],
+                        ),
 
-                              // Gambar
-                              Image.network(items![index]['product']['image_path'],width: 70,height: 70,),
-                              const SizedBox(width: 12),
+                        const SizedBox(height: 8),
 
-                              // Text Info (flexible)
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      product['name'],
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(product['ukuran'] ?? "-"),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          "IDR ${product['price']}",
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              )
+                        // Item Row
+                        Row(
+                          children: [
+                            // Checkbox Item
+                            Checkbox(
+                              value: selectedIds.contains(item['id']),
+                              onChanged: (value) {
+                                setState(() {
+                                  if (value == true) {
+                                    selectedIds.add(item['id']);
+                                  } else {
+                                    selectedIds.remove(item['id']);
+                                  }
+                                  print("Selected IDs: $selectedIds");
+                                });
+                              },
+                            ),
+
+                            // Gambar
+                            Image.network(items![index]['product']['image_path'],width: 70,height: 70,),
+                            const SizedBox(width: 12),
+
+                            // Text Info (flexible)
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    product['name'],
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(product['ukuran'] ?? "-"),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        "IDR ${product['price']}",
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
           ),
         ],
       ),
