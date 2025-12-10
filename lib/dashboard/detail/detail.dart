@@ -126,7 +126,7 @@ class _DetailPageState extends State<DetailPage> {
                   Expanded(
                     child: Container(
                       height: 30,
-                      alignment: Alignment.center,   // INI YANG BIKIN TEXT DI TENGAH
+                      alignment: Alignment.center,
                       child: Text(
                         detailProducts!['kategori'],
                         style: TextStyle(
@@ -136,6 +136,11 @@ class _DetailPageState extends State<DetailPage> {
                       ),
                     ),
                   ),
+
+                  //   wishlist
+                  InkWell(onTap: (){},
+                    child: Icon(Icons.favorite_border_outlined),
+                  )
                 ],
               ),
             ),
@@ -167,7 +172,7 @@ class _DetailPageState extends State<DetailPage> {
                       color: AppColors.primary500,
                       fontSize: 24,
                       fontWeight: FontWeight.bold
-                    ),)
+                    ),),
 
                   ],
                 ),

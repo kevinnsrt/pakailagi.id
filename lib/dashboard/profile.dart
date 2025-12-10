@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:tubes_pm/api/user-data.dart';
 import 'package:tubes_pm/colors/colors.dart';
+import 'package:tubes_pm/faq/FaqPage.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -171,9 +172,14 @@ class _ProfilePageState extends State<ProfilePage> {
               // INFORMASI
               // =============================
               _sectionTitle("Informasi"),
-              _menuItem(Icons.question_mark, "FAQ"),
-              _line(),
-              _menuItem(Icons.chat, "Chat Bantuan"),
+              InkWell(
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const FaqPage()));
+                },
+                child: _menuItem(Icons.question_mark, "FAQ"),
+              ),
+              // _line(),
+              // _menuItem(Icons.chat, "Chat Bantuan"),
 
               _divider(),
 
