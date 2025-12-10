@@ -8,7 +8,8 @@ class ApiServiceRegister {
     required String uid,
     required String username,
     required String number,
-    required String location,
+    required double latitude,
+    required double longitude,
     required String token,
   }) async {
 
@@ -31,7 +32,8 @@ class ApiServiceRegister {
         "uid": uid,
         "username": username,
         "number": number,
-        "location": location,
+        "latitude": latitude,
+        "longitude": longitude,
       }),
     );
 

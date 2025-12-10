@@ -24,6 +24,9 @@ class RegisterAuth {
   String number = "";
   String location = "";
 
+  double latitude =0;
+  double longitude=0;
+
   register1() {
     print(username);
     print(email);
@@ -46,7 +49,8 @@ class RegisterAuth {
         uid: user.uid.toString(),
         username: username.toString(),
         number: number.toString(),
-        location: location.toString(),
+        latitude: latitude,
+        longitude: longitude,
         token: token.toString(),
       );
     }

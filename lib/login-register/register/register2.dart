@@ -15,6 +15,8 @@ class _RegisterPage2State extends State<RegisterPage2> {
   final TextEditingController _number = TextEditingController();
 
   String? _locationText = "Belum diambil";
+  double _latitude = 0;
+  double _longitude=0;
 
   // ─────────────────────────────────────────────
   // FUNGSI AMBIL LOKASI
@@ -49,6 +51,9 @@ class _RegisterPage2State extends State<RegisterPage2> {
 
       setState(() {
         _locationText = "${pos.latitude}, ${pos.longitude}";
+        _latitude = pos.latitude;
+        _longitude = pos.longitude;
+
       });
 
       // Simpan ke RegisterAuth
@@ -126,9 +131,7 @@ class _RegisterPage2State extends State<RegisterPage2> {
                               ),
                             ],
                           ),
-
                           const SizedBox(height: 24),
-
                           // Lokasi
                           Column(
                             spacing: 8,
@@ -140,27 +143,10 @@ class _RegisterPage2State extends State<RegisterPage2> {
                                 style: TextStyle(fontSize: 13),
                               ),
 
-                              // ElevatedButton(
-                              //   onPressed: () {
-                              //     if (_locationText == "Belum diambil") return;
-                              //
-                              //     final parts = _locationText!.split(", ");
-                              //     final lat = double.parse(parts[0]);
-                              //     final lng = double.parse(parts[1]);
-                              //
-                              //     Navigator.push(
-                              //       context,
-                              //       MaterialPageRoute(
-                              //         builder: (_) => MapPage(lat: lat, lng: lng),
-                              //       ),
-                              //     );
-                              //   },
-                              //   child: Text("Lihat di Peta"),
-                              // ),
                               if (_locationText != "Belum diambil") ...[
                                 SizedBox(height: 12),
                                 Container(
-                                  height: 200, // boleh kamu sesuaikan
+                                  height: 200,
                                   width: double.infinity,
                                   child: MapPage(
                                     key: ValueKey(_locationText),
@@ -207,6 +193,8 @@ class _RegisterPage2State extends State<RegisterPage2> {
                               foregroundColor: Colors.white),
                           onPressed: () {
                             RegisterAuth.instance.number = _number.text;
+                            RegisterAuth.instance.latitude = _latitude;
+                            RegisterAuth.instance.longitude = _longitude;
 
                             if (RegisterAuth.instance.number.isEmpty ||
                                 RegisterAuth.instance.location.isEmpty) {
