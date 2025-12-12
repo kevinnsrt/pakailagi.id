@@ -27,17 +27,20 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> userdata() async {
     final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final data = await ApiServiceLogin.loginWithUid(uid: user.uid);
-      setState(() {
-        userData = data;
-      });
-      double lat = data["latitude"];
-      double lng = data["longitude"];
-      address = await getAddressFromLatLng(lat, lng);
-      setState(() {});
-    }
+    if (user == null) return;
+
+    final data = await ApiServiceLogin.loginWithUid(uid: user.uid);
+
+    double lat = data["latitude"];
+    double lng = data["longitude"];
+    String alamat = await getAddressFromLatLng(lat, lng);
+
+    setState(() {
+      userData = data;
+      address = alamat;
+    });
   }
+
 
   Future<String> getAddressFromLatLng(double lat, double lng) async {
     final url = Uri.parse(
@@ -72,6 +75,10 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
+    refreshData();
+  }
+
+  void refreshData() {
     userdata();
   }
 
@@ -205,7 +212,15 @@ class _ProfilePageState extends State<ProfilePage> {
               _line(),
               InkWell(
                 onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=> EditLocation(lat: userData!["latitude"],lng: userData!["longitude"],address: address.toString(),)));
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>
+                      EditLocation(lat: userData!["latitude"],
+                        lng: userData!["longitude"],
+                        address: address.toString(),))).then((shouldRefresh){
+                        if(shouldRefresh ==  true){
+                          refreshData();
+                        }
+
+                  });
                 },
                 child: _menuItem(Icons.location_on, "Lokasi Anda"),
               ),

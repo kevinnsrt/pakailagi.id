@@ -19,7 +19,7 @@ class PostLocation{
         // "Authorization": "Bearer $token",
       },
       body: jsonEncode({
-        "id": uid,
+        "uid": uid,
         "latitude":lat,
         "longitude":lng
       }),
