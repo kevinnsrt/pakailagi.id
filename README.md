@@ -23,7 +23,7 @@ Melalui aplikasi ini, pengguna dapat **menjual, membeli, dan berbagi pakaian bek
 ### 1. CRUD (Create, Read, Update, Delete)
 Mendukung proses pengelolaan data secara penuh, meliputi pembuatan, penayangan, pembaruan, dan penghapusan postingan pakaian bekas. Fitur ini menjadi inti sistem jual-beli dalam aplikasi.
 
-### 2. Authentication (google, apple, native)
+### 2. Authentication (google & native)
 Aplikasi Menyediakan sistem autentikasi yang aman dan fleksibel, memungkinkan pengguna untuk masuk menggunakan akun Google, Apple, atau melalui pendaftaran native.
 
 ### 3. User Location
@@ -44,6 +44,7 @@ Menyimpan seluruh data pengguna, transaksi, dan media secara aman melalui integr
 |      **Framework**     |          Flutter         |
 | **Bahasa Pemrograman** |           Dart           |
 |     **Version SDK**    |    Flutter SDK 3.35.0    |
+|     **BACKEND**        |      Laravel (PHP)       | 
 |     **Android SDK**    |      Version 36.1.0      | 
 |         **IDE**        | VS Code / Android Studio | 
 
@@ -52,6 +53,10 @@ Menyimpan seluruh data pengguna, transaksi, dan media secara aman melalui integr
 ## 🧱 Implementasi Layout Dasar (3 Halaman)
 Dapat dilihat pada tautan figma berikut: https://www.figma.com/design/YurNtDFBSFp1e0cekH6O1j/UI-DESIGN?node-id=0-1&t=hgt4E52uiY95WwO9-1
 password = pakailagi.id
+
+
+## Github API
+https://github.com/kevinnsrt/pakailagi.id_api.git
 
 ---
 
