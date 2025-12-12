@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tubes_pm/api/user-data.dart';
 import 'package:tubes_pm/colors/colors.dart';
 import 'package:tubes_pm/dashboard/items/beranda.dart';
 import 'package:http/http.dart' as http;
+
 
 class HomePage2 extends StatefulWidget {
   const HomePage2({super.key});

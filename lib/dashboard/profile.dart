@@ -8,6 +8,7 @@ import 'package:tubes_pm/colors/colors.dart';
 import 'package:tubes_pm/faq/FaqPage.dart';
 import 'package:tubes_pm/map/edit_location.dart';
 
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -79,10 +80,10 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
+
         child: SingleChildScrollView(
           child: Column(
             children: [
-
               // =============================
               // PROFILE SECTION
               // =============================

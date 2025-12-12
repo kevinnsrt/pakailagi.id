@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+import 'package:tubes_pm/api/post_location.dart';
 import 'package:tubes_pm/colors/colors.dart';
 import 'package:tubes_pm/map/map.dart';
 
@@ -73,6 +75,7 @@ class _EditLocationState extends State<EditLocation> {
         child: Column(
           spacing: 12,
           children: [
+
             // MAP
             Container(
               height: 200,
@@ -165,7 +168,23 @@ class _EditLocationState extends State<EditLocation> {
                   elevation: 6,
                   shadowColor: AppColors.primary500
                 ),
-                onPressed: (){}, child: Text("Simpan"),)
+                onPressed: () async{
+                  try {
+                    final res = await PostLocation.postLocation(
+                      lat: currentLat,
+                      lng: currentLng,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Lokasi berhasil diperbarui")),
+                    );
+                    Navigator.pop(context);
+                  } catch (e) {
+                    print(e);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Gagal menyimpan lokasi")),
+                    );
+                  }
+                }, child: Text("Simpan"),)
             )
           ],
         ),
