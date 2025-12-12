@@ -45,14 +45,7 @@ class RegisterAuth {
     if (user != null) {
       final token = await user.getIdToken();
 
-      await ApiServiceRegister.registerToBackend(
-        uid: user.uid.toString(),
-        username: username.toString(),
-        number: number.toString(),
-        latitude: latitude,
-        longitude: longitude,
-        token: token.toString(),
-      );
+
     }
     Navigator.pushReplacement(
       context,

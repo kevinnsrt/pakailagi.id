@@ -57,7 +57,8 @@ class _RegisterPage2State extends State<RegisterPage2> {
       });
 
       // Simpan ke RegisterAuth
-      RegisterAuth.instance.location = _locationText!;
+      RegisterAuth.instance.latitude = pos.latitude;
+      RegisterAuth.instance.longitude = pos.longitude;
 
       print("Lokasi tersimpan: ${RegisterAuth.instance.location}");
     } catch (e) {
@@ -197,7 +198,7 @@ class _RegisterPage2State extends State<RegisterPage2> {
                             RegisterAuth.instance.longitude = _longitude;
 
                             if (RegisterAuth.instance.number.isEmpty ||
-                                RegisterAuth.instance.location.isEmpty) {
+                                RegisterAuth.instance.longitude.isNaN || RegisterAuth.instance.longitude.isNaN) {
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 content: Text(
                                   "Data tidak boleh kosong",

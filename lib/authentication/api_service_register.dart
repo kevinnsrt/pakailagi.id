@@ -46,8 +46,9 @@ class ApiServiceRegister {
     required String uid,
     required String username,
     required String number,
-    required String location,
+    required double longitude,
     required String token,
+    required double latitude
   }) async {
 
     final token = await UserToken().getToken();
@@ -69,7 +70,8 @@ class ApiServiceRegister {
         "uid": uid,
         "username": username,
         "number": number,
-        "location": location,
+        "longitude": longitude,
+        "latitude": latitude
       }),
     );
 

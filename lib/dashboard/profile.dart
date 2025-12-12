@@ -1,9 +1,12 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:tubes_pm/api/user-data.dart';
 import 'package:tubes_pm/colors/colors.dart';
 import 'package:tubes_pm/faq/FaqPage.dart';
+import 'package:tubes_pm/map/edit_location.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -13,6 +16,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  String? address;
   Future<void> _signOut() async {
     await FirebaseAuth.instance.signOut();
     await GoogleSignIn().signOut();
@@ -27,6 +31,40 @@ class _ProfilePageState extends State<ProfilePage> {
       setState(() {
         userData = data;
       });
+      double lat = data["latitude"];
+      double lng = data["longitude"];
+      address = await getAddressFromLatLng(lat, lng);
+      setState(() {});
+    }
+  }
+
+  Future<String> getAddressFromLatLng(double lat, double lng) async {
+    final url = Uri.parse(
+      "https://nominatim.openstreetmap.org/reverse?lat=$lat&lon=$lng&format=json&addressdetails=1",
+    );
+
+    final response = await http.get(
+      url,
+      headers: {
+        "User-Agent": "Flutter-App",
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data["address"] == null) return "Alamat tidak ditemukan";
+
+      final adr = data["address"];
+
+      return [
+        adr["road"],
+        adr["suburb"],
+        adr["city"],
+        adr["state"],
+        adr["country"],
+      ].where((e) => e != null).join(", ");
+    } else {
+      return "Gagal mendapatkan alamat";
     }
   }
 
@@ -78,7 +116,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                                 SizedBox(height: 4),
                                 Text(
-                                  userData?["number"] ?? "Loading...",
+                                  address ?? "Loading...",
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
@@ -164,7 +202,12 @@ class _ProfilePageState extends State<ProfilePage> {
               _sectionTitle("Pengaturan"),
               _menuItem(Icons.lock, "Edit Password"),
               _line(),
-              _menuItem(Icons.location_on, "Lokasi Anda"),
+              InkWell(
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> EditLocation(lat: userData!["latitude"],lng: userData!["longitude"],address: address.toString(),)));
+                },
+                child: _menuItem(Icons.location_on, "Lokasi Anda"),
+              ),
 
               _divider(),
 
