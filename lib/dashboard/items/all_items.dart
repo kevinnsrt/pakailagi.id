@@ -29,6 +29,7 @@ class _AllItemsPageState extends State<AllItemsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: RefreshIndicator(
         onRefresh: fetchItems,

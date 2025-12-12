@@ -1,4 +1,6 @@
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:tubes_pm/authentication/api_service_register.dart';
 import 'package:tubes_pm/authentication/authGate.dart';
 import 'package:tubes_pm/authentication/google_sign_in.dart';
@@ -13,11 +15,60 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
+  double latitude=0;
+  double longitude=0;
 
   final TextEditingController _email = TextEditingController();
   final TextEditingController _pass = TextEditingController();
 
   List<bool> toggleList = [true];
+
+  Future<bool> getUserLocation() async {
+    try {
+      // cek GPS aktif
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Nyalakan GPS terlebih dahulu")));
+        await AppSettings.openAppSettings();
+        return false;
+      }
+
+      // cek izin
+      LocationPermission permission = await Geolocator.checkPermission();
+
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Izin lokasi ditolak")));
+        return false;
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Buka pengaturan untuk memberi izin lokasi")));
+        await AppSettings.openAppSettings();
+        return false;
+      }
+
+      // ambil posisi
+      final pos = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+
+      latitude = pos.latitude;
+      longitude = pos.longitude;
+
+      return true;
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Gagal mengambil lokasi")));
+      return false;
+    }
+  }
+
 
   void _toggle(int index) {
     setState(() {
@@ -212,6 +263,9 @@ class _LoginFormState extends State<LoginForm> {
                     children: [
                       GestureDetector(
                       onTap:() async{
+                        bool ok = await getUserLocation();
+                        if (!ok) return;
+
                         var userCredential = await GoogleSignInService().signInWithGoogle();
                         if (userCredential != null){
                           print(userCredential.user!.email);
@@ -220,7 +274,7 @@ class _LoginFormState extends State<LoginForm> {
                           ;
                           final token = await userCredential.user!.getIdToken();
 
-                          await ApiServiceRegister.registerGooogle(uid: userCredential.user!.uid, username: userCredential.user!.displayName.toString(), number: "null", location: "null", token: token.toString(),);
+                          await ApiServiceRegister.registerGooogle(uid: userCredential.user!.uid, username: userCredential.user!.displayName.toString(), number: "null", longitude: longitude, token: token.toString(),latitude: latitude);
 
                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>AuthGate()));
                         }

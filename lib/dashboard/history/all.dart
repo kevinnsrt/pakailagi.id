@@ -1,6 +1,11 @@
+import 'dart:convert';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tubes_pm/api/get_user_cart.dart';
+import 'package:tubes_pm/authentication/token.dart';
 import 'package:tubes_pm/colors/colors.dart';
+import 'package:http/http.dart' as http;
 
 class CartAll extends StatefulWidget {
   const CartAll({super.key});
@@ -29,7 +34,27 @@ class _CartAllState extends State<CartAll> {
     });
   }
 
-  bool get selectAll => items != null && items!.every((item) => selectedIds.contains(item['id']));
+  bool get selectAll =>
+      items != null &&
+          items!.every((item) => selectedIds.contains(item['id']));
+
+  /// ============================
+  /// ✔ HITUNG TOTAL ITEM TERPILIH
+  /// ============================
+  int getTotal() {
+    if (items == null) return 0;
+
+    int total = 0;
+
+    for (var item in items!) {
+      if (selectedIds.contains(item['id'])) {
+        final price = item['product']['price'] as num;
+        total += price.toInt(); // <-- aman tidak error
+      }
+    }
+
+    return total;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,128 +65,178 @@ class _CartAllState extends State<CartAll> {
     if (items!.isEmpty) {
       return const Center(child: Text("Keranjang kosong"));
     }
+
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          // Checkbox Pilih Semua
-          Row(
-            children: [
-              Checkbox(
-                value: selectAll,
-                onChanged: (value) {
-                  setState(() {
-                    if (value == true) {
-                      selectedIds = items!.map<int>((item) => item['id']).toSet();
-                    } else {
-                      selectedIds.clear();
-                    }
-                    print("Selected IDs: $selectedIds"); // <-- debug di sini
-                  });
+      body: RefreshIndicator(
+        onRefresh: fetchItems,
+        child: Column(
+          children: [
+            /// Checkbox Pilih Semua
+            Row(
+              children: [
+                Checkbox(
+                  value: selectAll,
+                  onChanged: (value) {
+                    setState(() {
+                      if (value == true) {
+                        selectedIds =
+                            items!.map<int>((item) => item['id']).toSet();
+                      } else {
+                        selectedIds.clear();
+                      }
+                    });
+                  },
+                ),
+                const Text("Pilih Semua")
+              ],
+            ),
+
+            /// LIST ITEM
+            Expanded(
+              child: ListView.builder(
+                itemCount: items!.length,
+                itemBuilder: (context, index) {
+                  final item = items![index];
+                  final product = item['product'];
+
+                  return Container(
+                    margin:
+                    const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.white,
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 4,
+                          offset: Offset(0, 2),
+                        )
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        /// Status
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: AppColors.primary600,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                item['status'],
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            )
+                          ],
+                        ),
+
+                        const SizedBox(height: 8),
+
+                        /// ITEM ROW
+                        Row(
+                          children: [
+                            /// Checkbox Item
+                            Checkbox(
+                              value: selectedIds.contains(item['id']),
+                              onChanged: (value) {
+                                setState(() {
+                                  if (value == true) {
+                                    selectedIds.add(item['id']);
+                                  } else {
+                                    selectedIds.remove(item['id']);
+                                  }
+                                });
+                              },
+                            ),
+
+                            /// Gambar
+                            Image.network(
+                              items![index]['product']['image_path'],
+                              width: 70,
+                              height: 70,
+                            ),
+                            const SizedBox(width: 12),
+
+                            /// Text Info
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    product['name'],
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(product['ukuran'] ?? "-"),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        "IDR ${product['price']}",
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
                 },
               ),
-              const Text("Pilih Semua")
-            ],
+            ),
+          ],
+        ),
+      ),
+
+      /// ============================
+      /// ✔ TOTAL + CHECKOUT BUTTON
+      /// ============================
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Text(
+            "Total: IDR ${getTotal()}",
+            style: const TextStyle(
+                fontSize: 16, fontWeight: FontWeight.bold),
           ),
+          const SizedBox(width: 10),
+          FloatingActionButton(
+            onPressed: () async {
+              List<int> idToPost = selectedIds.toList();
+              final token = await UserToken().getToken();
 
-          Expanded(
-            child: ListView.builder(
-              itemCount: items!.length,
-              itemBuilder: (context, index) {
-                final item = items![index];
-                final product = item['product'];
+              final url = Uri.parse(
+                  "https://pakailagi.user.cloudjkt02.com/api/carts/proses");
 
-                return Container(
-                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 4,
-                        offset: Offset(0, 2),
-                      )
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      // Status
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: AppColors.primary600,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Text(
-                              item['status'],
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                          )
-                        ],
-                      ),
+              final response = await http.post(url,
+                  headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer $token",
+                  },
+                  body: jsonEncode({"id": idToPost}));
 
-                      const SizedBox(height: 8),
-
-                      // Item Row
-                      Row(
-                        children: [
-                          // Checkbox Item
-                          Checkbox(
-                            value: selectedIds.contains(item['id']),
-                            onChanged: (value) {
-                              setState(() {
-                                if (value == true) {
-                                  selectedIds.add(item['id']);
-                                } else {
-                                  selectedIds.remove(item['id']);
-                                }
-                                print("Selected IDs: $selectedIds");
-                              });
-                            },
-                          ),
-
-                          // Gambar
-                          Image.network(items![index]['product']['image_path'],width: 70,height: 70,),
-                          const SizedBox(width: 12),
-
-                          // Text Info (flexible)
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  product['name'],
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(product['ukuran'] ?? "-"),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      "IDR ${product['price']}",
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              },
+              if (response.statusCode == 200) {
+                print("Barang berhasil di checkout");
+                fetchItems();
+              }
+            },
+            backgroundColor: Colors.white,
+            child: Icon(
+              Icons.shopping_cart_checkout,
+              color: AppColors.primary500,
             ),
           ),
         ],

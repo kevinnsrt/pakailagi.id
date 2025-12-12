@@ -24,6 +24,9 @@ class RegisterAuth {
   String number = "";
   String location = "";
 
+  double latitude =0;
+  double longitude=0;
+
   register1() {
     print(username);
     print(email);
@@ -42,13 +45,7 @@ class RegisterAuth {
     if (user != null) {
       final token = await user.getIdToken();
 
-      await ApiServiceRegister.registerToBackend(
-        uid: user.uid.toString(),
-        username: username.toString(),
-        number: number.toString(),
-        location: location.toString(),
-        token: token.toString(),
-      );
+
     }
     Navigator.pushReplacement(
       context,
