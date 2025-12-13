@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:tubes_pm/api/user-data.dart';
 import 'package:tubes_pm/colors/colors.dart';
+import 'package:tubes_pm/edit_password/edit_password.dart';
+import 'package:tubes_pm/edit_profile/edit_profile.dart';
 import 'package:tubes_pm/faq/FaqPage.dart';
 import 'package:tubes_pm/map/edit_location.dart';
 
@@ -135,7 +137,11 @@ class _ProfilePageState extends State<ProfilePage> {
                               ],
                             ),
                           ),
-                          Icon(Icons.edit, color: AppColors.grayscale700),
+                          InkWell(onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=> EditProfile()));
+                          },
+                          child: Icon(Icons.edit, color: AppColors.grayscale700),
+                          ),
                         ],
                       ),
                     ),
@@ -208,7 +214,12 @@ class _ProfilePageState extends State<ProfilePage> {
               // PENGATURAN SECTION
               // =============================
               _sectionTitle("Pengaturan"),
-              _menuItem(Icons.lock, "Edit Password"),
+              InkWell(
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> EditPassword()));
+                },
+                child: _menuItem(Icons.lock, "Edit Kata Sandi"),
+              ),
               _line(),
               InkWell(
                 onTap: (){
