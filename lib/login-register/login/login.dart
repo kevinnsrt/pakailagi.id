@@ -1,5 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:smooth_transition/smooth_transition.dart';
+import 'package:tubes_pm/colors/colors.dart';
 import 'package:tubes_pm/login-register/login/login-form.dart';
 import 'package:tubes_pm/login-register/register/register.dart';
 
@@ -11,93 +13,131 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  double screenHeight = 0;
+
+  // List gambar
+  final List<String> images = [
+    'assets/splash_1.png',
+    'assets/splash_2.png',
+  ];
+
+  int currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, startImageSlider);
+  }
+
+  void startImageSlider() {
+    Timer.periodic(const Duration(seconds: 3), (Timer timer) {
+      setState(() {
+        currentIndex = (currentIndex + 1) % images.length;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 350,
-              height: 240,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 120,
-                    height: 118,
-                    child: Image.asset('assets/logo2.png'),
-                  ),
+      body: Stack(
+        children: [
+          // Background Image
+          Container(
+            width: double.infinity,
+            height: screenHeight * 0.6,
+            decoration: BoxDecoration(
+              color: AppColors.grayscale300,
+            ),
+            child: Image.asset(
+              images[currentIndex],
+              fit: BoxFit.cover,
+            ),
+          ),
 
-                  SizedBox(
-                    height: 12,
-                  ),
-                  Text("Pakai Lagi, Selamatkan Bumi",
-                    style: TextStyle(fontWeight: FontWeight.bold,fontSize: 24),
-                    textAlign: TextAlign.center,
-                  ),
-
-                  SizedBox(
-                    height: 16,
-                  ),
-                  Text("Setiap pakaian yang kamu pakai ulang berarti satu langkah lebih hijau bagi lingkungan.",textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 16),),
-
-                ],
+          // Card
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              width: double.infinity,
+              height: screenHeight * 0.5,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
               ),
-            ),
-
-            SizedBox(
-              height: 111,
-            ),
-
-            Container(
-              width: 362,
-              height: 108,
-              child: Column(
-                spacing: 12,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 362,
-                    height: 48,
-                    child:  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                     backgroundColor: Color.fromRGBO(62, 138, 142, 1),
-                      foregroundColor: Colors.white
-                    ),onPressed: (){
-                      Navigator.push(context, PageTransition(child: const LoginForm(),
-                          type: PageTransitionType.fade,
-                          duration: Duration(milliseconds: 250),
-                          curve: Curves.easeIn,
-                      ));
-                    }, child: Text("Masuk",style: TextStyle(fontWeight: FontWeight.bold),)),
-                  ),
-
-                  SizedBox(
-                    width: 362,
-                    height: 48,
-                    child:  ElevatedButton(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 64),
+                    Container(
+                      width: 361,
+                      child: const Text(
+                        "Bandingkan produk, temukan penjual, lakukan transaksi dengan siapa saja",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: AppColors.grayscale700,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 80),
+                    Container(
+                      width: 361,
+                      height: 48,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const LoginForm()));
+                        },
                         style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromRGBO(243, 244, 246, 1),
-                        foregroundColor: Color.fromRGBO(37, 70, 74, 1),
-                          elevation: 5,
-                    ),onPressed: (){
-                     Navigator.push(context, PageTransition(
-                         child: const RegisterPage(),
-                         type: PageTransitionType.fade,
-                         duration: Duration(milliseconds: 300),
-                         curve: Curves.easeIn));
-                    },
-                     child: Text("Daftar",style: TextStyle(fontWeight: FontWeight.bold),)),
-                  ),
-                ],
+                          backgroundColor: AppColors.primary500,
+                          foregroundColor: Colors.white,
+                        ),
+                        child: const Text(
+                          "Masuk",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Belum punya akun?"),
+                        const SizedBox(width: 4),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                    const RegisterPage()));
+                          },
+                          child: const Text(
+                            "Daftar",
+                            style: TextStyle(
+                                color: AppColors.primary700,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+                ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

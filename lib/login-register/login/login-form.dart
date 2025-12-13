@@ -282,9 +282,9 @@ class _LoginFormState extends State<LoginForm> {
                         child: Image.asset('assets/google.png'),
                       ),
 
-                      GestureDetector(
-                        child: Image.asset('assets/apple.png'),
-                      )
+                      // GestureDetector(
+                      //   child: Image.asset('assets/apple.png'),
+                      // )
                     ],
                   ),
                 ),
