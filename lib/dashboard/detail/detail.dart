@@ -47,7 +47,7 @@ class _DetailPageState extends State<DetailPage> {
   Future<void> sendToCart() async{
     final cred = await FirebaseAuth.instance.currentUser;
     final uid = cred!.uid.toString();
-    final token = UserToken().getToken().toString();
+    final token = await UserToken().getToken();
     
     final url = Uri.parse("https://pakailagi.user.cloudjkt02.com/api/carts");
 
@@ -61,7 +61,15 @@ class _DetailPageState extends State<DetailPage> {
         "product_id": widget.product_id
       })
     );
-
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Berhasil ditambahkan ke keranjang")),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Gagal menambahkan ke keranjang")),
+      );
+    }
     print(response.body);
   }
 
