@@ -34,6 +34,75 @@ class _CartAllState extends State<CartAll> {
     });
   }
 
+  void _showDialog(BuildContext context, int total) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.white,
+        title: const Text("Pembayaran"),
+        content: Container(
+          height: 310,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text("Silahkan lakukan pembayaran: IDR $total"),
+              Image.asset('assets/qris_test.jpg')
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              // lanjut proses checkout
+              List<int> idToPost = selectedIds.toList();
+              final token = await UserToken().getToken();
+
+              // session
+              if (token == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Session habis, silakan login ulang")),
+                );
+                return;
+              }
+
+              // pengecekan item
+              if (selectedIds.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Pilih minimal 1 item")),
+                );
+                return;
+              }
+
+              // method
+              final url = Uri.parse(
+                  "https://pakailagi.user.cloudjkt02.com/api/carts/proses");
+
+              final response = await http.post(url,
+                  headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer $token",
+                  },
+                  body: jsonEncode({"id": idToPost}));
+
+              if (response.statusCode == 200) {
+                print("Barang berhasil di checkout");
+                fetchItems();
+              }
+            },
+            child: const Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+
   bool get selectAll =>
       items != null &&
           items!.every((item) => selectedIds.contains(item['id']));
@@ -214,24 +283,11 @@ class _CartAllState extends State<CartAll> {
           ),
           const SizedBox(width: 10),
           FloatingActionButton(
-            onPressed: () async {
-              List<int> idToPost = selectedIds.toList();
-              final token = await UserToken().getToken();
+            onPressed: selectedIds.isEmpty
+                ? null
+                : () {
 
-              final url = Uri.parse(
-                  "https://pakailagi.user.cloudjkt02.com/api/carts/proses");
-
-              final response = await http.post(url,
-                  headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer $token",
-                  },
-                  body: jsonEncode({"id": idToPost}));
-
-              if (response.statusCode == 200) {
-                print("Barang berhasil di checkout");
-                fetchItems();
-              }
+              _showDialog(context, getTotal());
             },
             backgroundColor: Colors.white,
             child: Icon(
