@@ -103,9 +103,16 @@ class _CartAllState extends State<CartAll> {
 
 
 
-  bool get selectAll =>
-      items != null &&
-          items!.every((item) => selectedIds.contains(item['id']));
+  bool get selectAll {
+    if (items == null) return false;
+
+    final cartItems =
+    items!.where((item) => item['status'] == 'Dikeranjang');
+
+    return cartItems.isNotEmpty &&
+        cartItems.every((item) => selectedIds.contains(item['id']));
+  }
+
 
   /// ============================
   /// ✔ HITUNG TOTAL ITEM TERPILIH
@@ -116,22 +123,31 @@ class _CartAllState extends State<CartAll> {
     int total = 0;
 
     for (var item in items!) {
-      if (selectedIds.contains(item['id'])) {
+      if (item['status'] == 'Dikeranjang' &&
+          selectedIds.contains(item['id'])) {
         final price = item['product']['price'] as num;
-        total += price.toInt(); // <-- aman tidak error
+        total += price.toInt();
       }
     }
 
     return total;
   }
 
+
   @override
   Widget build(BuildContext context) {
+    final cartItems =
+    items!.where((item) => item['status'] == 'Dikeranjang').toList();
+
     if (items == null) {
       return const Center(child: CircularProgressIndicator());
     }
 
     if (items!.isEmpty) {
+      return const Center(child: Text("Keranjang kosong"));
+    }
+
+    if (cartItems.isEmpty) {
       return const Center(child: Text("Keranjang kosong"));
     }
 
@@ -147,15 +163,18 @@ class _CartAllState extends State<CartAll> {
                 Checkbox(
                   value: selectAll,
                   onChanged: (value) {
-                    setState(() {
-                      if (value == true) {
-                        selectedIds =
-                            items!.map<int>((item) => item['id']).toSet();
-                      } else {
-                        selectedIds.clear();
-                      }
-                    });
-                  },
+                  setState(() {
+                    if (value == true) {
+                      selectedIds = items!
+                          .where((item) => item['status'] == 'Dikeranjang')
+                          .map<int>((item) => item['id'])
+                          .toSet();
+                    } else {
+                      selectedIds.clear();
+                    }
+                  });
+                },
+
                 ),
                 const Text("Pilih Semua")
               ],
@@ -164,9 +183,9 @@ class _CartAllState extends State<CartAll> {
             /// LIST ITEM
             Expanded(
               child: ListView.builder(
-                itemCount: items!.length,
+                itemCount: cartItems.length,
                 itemBuilder: (context, index) {
-                  final item = items![index];
+                  final item = cartItems[index];
                   final product = item['product'];
 
                   return Container(
@@ -226,7 +245,7 @@ class _CartAllState extends State<CartAll> {
 
                             /// Gambar
                             Image.network(
-                              items![index]['product']['image_path'],
+                              product['image_path'],
                               width: 70,
                               height: 70,
                             ),

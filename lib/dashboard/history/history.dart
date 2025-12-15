@@ -5,6 +5,7 @@ import 'package:tubes_pm/api/get_user_cart.dart';
 import 'package:tubes_pm/colors/colors.dart';
 import 'package:tubes_pm/dashboard/history/all.dart';
 import 'package:tubes_pm/dashboard/history/proses.dart';
+import 'package:tubes_pm/dashboard/history/selesai.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
@@ -30,6 +31,7 @@ class _HistoryPageState extends State<HistoryPage> {
   final List<Widget> _screen = [
     CartAll(),
     ProsesCart(),
+    SelesaiPage(),
   ];
 
   void _onTapped (int index){
@@ -69,7 +71,12 @@ class _HistoryPageState extends State<HistoryPage> {
                     },
                     child: Text("Diproses",style: TextStyle(color: AppColors.grayscale950,fontWeight: FontWeight.bold,fontSize: 16),),
                   ),
-                  Text("Selesai",style: TextStyle(color: AppColors.grayscale950,fontWeight: FontWeight.bold,fontSize: 16),),
+                 InkWell(
+                   onTap: (){
+                     _onTapped(2);
+                   },
+                   child:  Text("Selesai",style: TextStyle(color: AppColors.grayscale950,fontWeight: FontWeight.bold,fontSize: 16),),
+                 ),
                   Text("Dibatalkan",style: TextStyle(color: AppColors.grayscale950,fontWeight: FontWeight.bold,fontSize: 16),),
                 ],
               ),

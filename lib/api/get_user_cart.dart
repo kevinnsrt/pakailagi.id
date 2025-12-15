@@ -56,7 +56,7 @@ class GetUserCart {
        if (token == null) {
          print("Token null, user belum login");
        }
-       final url = Uri.parse("https://pakailagi.user.cloudjkt02.com/api/carts/user/proses");
+       final url = Uri.parse("https://pakailagi.user.cloudjkt02.com/api/carts/user");
 
        final response = await http.post(
          url,
