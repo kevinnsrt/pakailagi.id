@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:smooth_transition/smooth_transition.dart';
@@ -18,6 +19,26 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
+  // fcm
+  Future<void> _setupFCM() async {
+    // Request permission (Android 13+ & iOS)
+    await FirebaseMessaging.instance.requestPermission();
+
+    // Pastikan token sudah ada
+    // String? token = await FirebaseMessaging.instance.getToken();
+    // print("FCM TOKEN: $token");
+    await FirebaseMessaging.instance.subscribeToTopic('all_users')
+        .then((_) => print('Subscribed OK'))
+        .catchError((e) => print(e));
+
+    // if (token != null) {
+    //
+    //   print("Subscribed to topic: all_users");
+    // } else {
+    //   print("FCM token NULL, subscribe dibatalkan");
+    // }
+  }
+
   int _selectedIndex = 0;
 
   final List<Widget> _screen = [
@@ -30,6 +51,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState(){
     super.initState();
+    _setupFCM();
     _selectedIndex = widget.selectedIndex;
   }
 
