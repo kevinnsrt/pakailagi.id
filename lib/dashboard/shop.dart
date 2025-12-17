@@ -60,10 +60,6 @@ class _ShopPageState extends State<ShopPage> {
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
         title: Text("Belanja",style: TextStyle(fontWeight: FontWeight.bold),),
-        actions: [
-          Icon(Icons.favorite_border_outlined),
-          SizedBox(width: 12,)
-        ],
       ),
       body: SafeArea(
         child: Column(

@@ -7,6 +7,7 @@ import 'package:tubes_pm/authentication/token.dart';
 import 'package:tubes_pm/colors/colors.dart';
 import 'package:http/http.dart' as http;
 import 'package:tubes_pm/dashboard/bottom-navbar.dart';
+import 'package:tubes_pm/widget/top_notif.dart';
 
 class DetailPage extends StatefulWidget {
   final String product_id;
@@ -69,14 +70,13 @@ class _DetailPageState extends State<DetailPage> {
       }),
     );
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(response.statusCode == 200 ||
-            response.statusCode == 201
-            ? "Berhasil ditambahkan ke keranjang"
-            : "Gagal menambahkan ke keranjang"),
-      ),
-    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      TopNotif.success(context, "Barang berhasil ditambahkan ke wishlist");
+    } else {
+      print(response.statusCode);
+      print(response.body);
+      TopNotif.error(context, "Barang sudah ada di wishlist");
+    }
   }
 
   @override
@@ -183,13 +183,11 @@ class _DetailPageState extends State<DetailPage> {
                         );
 
                         if (response.statusCode == 200 || response.statusCode == 201) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Barang menjadi idamanmu")),
-                          );
+                          TopNotif.success(context, "Barang berhasil ditambahkan ke keranjang");
                         } else {
                           print(response.statusCode);
                           print(response.body);
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Barang sudah ada di wishlist")));
+                          TopNotif.error(context, "Barang sudah ada di keranjang");
                         }
                       },
                       child: const Icon(Icons.favorite_border),

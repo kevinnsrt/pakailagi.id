@@ -127,15 +127,32 @@ class _FilterPageState extends State<FilterPage> {
                       Stack(
                         children: [
                           Image.network(
-                            item['image_path'],
+                            item['image_path'], // URL harus di sini
                             width: double.infinity,
                             height: 169,
                             fit: BoxFit.cover,
-                            errorBuilder:
-                                (context, error, stackTrace) {
-                              return const Icon(
-                                Icons.broken_image,
-                                size: 50,
+                            // Menampilkan indikator saat gambar sedang didownload
+                            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                              if (loadingProgress == null) {
+                                return child; // Gambar selesai dimuat
+                              }
+                              return SizedBox(
+                                height: 169,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    value: loadingProgress.expectedTotalBytes != null
+                                        ? loadingProgress.cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes!
+                                        : null,
+                                  ),
+                                ),
+                              );
+                            },
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                height: 169,
+                                color: Colors.grey[200],
+                                child: const Icon(Icons.broken_image, size: 50, color: Colors.grey),
                               );
                             },
                           ),

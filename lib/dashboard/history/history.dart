@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_pm/colors/colors.dart';
 import 'package:tubes_pm/dashboard/history/all.dart';
+import 'package:tubes_pm/dashboard/history/batal.dart';
 import 'package:tubes_pm/dashboard/history/proses.dart';
 import 'package:tubes_pm/dashboard/history/selesai.dart';
 
@@ -16,6 +17,7 @@ class _HistoryPageState extends State<HistoryPage> {
   final GlobalKey<CartAllState> _allKey = GlobalKey<CartAllState>();
   final GlobalKey<ProsesCartState> _prosesKey = GlobalKey<ProsesCartState>();
   final GlobalKey<SelesaiPageState> _selesaiKey = GlobalKey<SelesaiPageState>();
+  final GlobalKey<BatalPageState> _batalKey = GlobalKey<BatalPageState>();
 
   int _selectedIndex = 0;
 
@@ -32,6 +34,9 @@ class _HistoryPageState extends State<HistoryPage> {
     } else if (index == 2) {
       _selesaiKey.currentState?.refresh();
     }
+    else if (index == 3) {
+      _batalKey.currentState?.refresh();
+    }
   }
 
   @override
@@ -41,6 +46,7 @@ class _HistoryPageState extends State<HistoryPage> {
       CartAll(key: _allKey),
       ProsesCart(key: _prosesKey),
       SelesaiPage(key: _selesaiKey),
+      BatalPage(key: _batalKey),
     ];
 
     return Scaffold(
@@ -69,14 +75,7 @@ class _HistoryPageState extends State<HistoryPage> {
                   _tabItem("Dikeranjang", 0),
                   _tabItem("Diproses", 1),
                   _tabItem("Selesai", 2),
-                  Text(
-                    "Dibatalkan",
-                    style: TextStyle(
-                      color: AppColors.grayscale950,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
+                  _tabItem("Dibatalkan", 3),
                 ],
               ),
             ),

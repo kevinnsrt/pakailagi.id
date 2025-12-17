@@ -5,6 +5,7 @@ import 'package:tubes_pm/authentication/token.dart';
 import 'package:tubes_pm/colors/colors.dart';
 import 'package:http/http.dart' as http;
 import 'package:tubes_pm/dashboard/detail/detail.dart';
+import 'package:tubes_pm/widget/top_notif.dart';
 
 class WishlistPage extends StatefulWidget {
 
@@ -63,7 +64,10 @@ class _WishlistPageState extends State<WishlistPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text("Wishlist"),
+        title: const Text(
+          "Wishlist",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -208,14 +212,9 @@ class _WishlistPageState extends State<WishlistPage> {
 
                               if (response.statusCode == 200) {
                                 await fetchItems();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text("Barang dihapus dari wishlist")),
-                                );
+                                TopNotif.success(context, "Wishlist dihapus");
                               } else {
-                                print(response.body);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text("Barang gagal dihapus")),
-                                );
+                                TopNotif.error(context, "Wishlist gagal dihapus");
                               }
                             },
 

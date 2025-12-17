@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:tubes_pm/api/get_user_cart.dart';
@@ -37,19 +36,11 @@ class ProsesCartState extends State<ProsesCart> {
     });
   }
 
-  /// ============================
-  /// ✔ ITEM DALAM PENGIRIMAN
-  /// ============================
   List<dynamic> get pengirimanItems {
     if (items == null) return [];
-    return items!
-        .where((item) => item['status'] == 'Dalam Pengiriman')
-        .toList();
+    return items!.where((item) => item['status'] == 'Dalam Pengiriman').toList();
   }
 
-  /// ============================
-  /// ✔ ITEM DIPROSES + PENGIRIMAN
-  /// ============================
   List<dynamic> get cartItems {
     if (items == null) return [];
     return items!
@@ -82,46 +73,45 @@ class ProsesCartState extends State<ProsesCart> {
         onRefresh: fetchItems,
         child: Column(
           children: [
-            /// ============================
-            /// ✔ PILIH SEMUA (HANYA PENGIRIMAN)
-            /// ============================
+            /// PILIH SEMUA
             if (hasDalamPengiriman)
-              Row(
-                children: [
-                  Checkbox(
-                    value: selectAll,
-                    onChanged: (value) {
-                      setState(() {
-                        if (value == true) {
-                          selectedIds = pengirimanItems
-                              .map<int>((item) => item['id'])
-                              .toSet();
-                        } else {
-                          selectedIds.clear();
-                        }
-                      });
-                    },
-                  ),
-                  const Text("Pilih Semua"),
-                ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: Row(
+                  children: [
+                    Checkbox(
+                      value: selectAll,
+                      activeColor: AppColors.primary600,
+                      onChanged: (value) {
+                        setState(() {
+                          if (value == true) {
+                            selectedIds = pengirimanItems
+                                .map<int>((item) => item['id'])
+                                .toSet();
+                          } else {
+                            selectedIds.clear();
+                          }
+                        });
+                      },
+                    ),
+                    const Text("Pilih Semua (Diterima)",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                  ],
+                ),
               ),
 
-            /// ============================
-            /// ✔ LIST ITEM
-            /// ============================
+            /// LIST ITEM
             Expanded(
               child: ListView.builder(
                 itemCount: cartItems.length,
                 itemBuilder: (context, index) {
                   final item = cartItems[index];
                   final product = item['product'];
-                  final isPengiriman =
-                      item['status'] == 'Dalam Pengiriman';
+                  final isPengiriman = item['status'] == 'Dalam Pengiriman';
 
                   return Container(
-                    margin: const EdgeInsets.symmetric(
-                        vertical: 8, horizontal: 10),
-                    padding: const EdgeInsets.all(10),
+                    margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(8),
@@ -135,79 +125,106 @@ class ProsesCartState extends State<ProsesCart> {
                     ),
                     child: Column(
                       children: [
-                        /// Status
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: AppColors.primary600,
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                item['status'],
-                                style:
-                                const TextStyle(color: Colors.white),
-                              ),
+                        /// Status Tag
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: isPengiriman ? AppColors.primary600 : Colors.orange,
+                              borderRadius: BorderRadius.circular(6),
                             ),
-                          ],
+                            child: Text(
+                              item['status'],
+                              style: const TextStyle(color: Colors.white, fontSize: 11),
+                            ),
+                          ),
                         ),
-
                         const SizedBox(height: 8),
 
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            /// Checkbox item (HANYA PENGIRIMAN)
-                            isPengiriman
-                                ? Checkbox(
-                              value: selectedIds
-                                  .contains(item['id']),
-                              onChanged: (value) {
-                                setState(() {
-                                  if (value == true) {
-                                    selectedIds.add(item['id']);
-                                  } else {
-                                    selectedIds
-                                        .remove(item['id']);
-                                  }
-                                });
-                              },
-                            )
-                                : const SizedBox(width: 48),
+                            /// Checkbox (Hanya muncul jika status Dalam Pengiriman)
+                            if (isPengiriman)
+                              Checkbox(
+                                value: selectedIds.contains(item['id']),
+                                activeColor: AppColors.primary600,
+                                onChanged: (value) {
+                                  setState(() {
+                                    if (value == true) {
+                                      selectedIds.add(item['id']);
+                                    } else {
+                                      selectedIds.remove(item['id']);
+                                    }
+                                  });
+                                },
+                              )
+                            else
+                              const SizedBox(width: 8),
 
-                            Image.network(
-                              product['image_path'],
-                              width: 70,
-                              height: 70,
-                              fit: BoxFit.cover,
+                            /// Gambar Produk
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.network(
+                                product['image_path'],
+                                width: 85,
+                                height: 85,
+                                fit: BoxFit.cover,
+                                loadingBuilder: (context, child, loadingProgress) {
+                                  if (loadingProgress == null) return child;
+                                  return Container(
+                                    width: 85,
+                                    height: 85,
+                                    color: Colors.grey[100],
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        value: loadingProgress.expectedTotalBytes != null
+                                            ? loadingProgress.cumulativeBytesLoaded /
+                                            loadingProgress.expectedTotalBytes!
+                                            : null,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    width: 85,
+                                    height: 85,
+                                    color: Colors.grey[200],
+                                    child: const Icon(Icons.broken_image, size: 30, color: Colors.grey),
+                                  );
+                                },
+                              ),
                             ),
+
                             const SizedBox(width: 12),
 
+                            /// Detail Produk
                             Expanded(
                               child: Column(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     product['name'],
-                                    maxLines: 1,
-                                    overflow:
-                                    TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                        fontWeight:
-                                        FontWeight.bold),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(fontWeight: FontWeight.bold),
                                   ),
-                                  Text(product['ukuran'] ?? "-"),
+                                  const SizedBox(height: 4),
+                                  Text("Ukuran: ${product['ukuran'] ?? "-"}",
+                                      style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                                  const SizedBox(height: 8),
                                   Align(
-                                    alignment:
-                                    Alignment.centerRight,
+                                    alignment: Alignment.centerRight,
                                     child: Text(
                                       "IDR ${product['price']}",
-                                      style: const TextStyle(
-                                          fontWeight:
-                                          FontWeight.bold),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColors.primary600,
+                                          fontSize: 15
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -225,19 +242,11 @@ class ProsesCartState extends State<ProsesCart> {
         ),
       ),
 
-      /// ============================
-      /// ✔ FAB (HANYA PENGIRIMAN)
-      /// ============================
-      floatingActionButton: hasDalamPengiriman
-          ? FloatingActionButton(
-        onPressed: selectedIds.isEmpty
-            ? null
-            : () async {
-          final token =
-          await UserToken().getToken();
-
-          final url = Uri.parse(
-              "https://pakailagi.user.cloudjkt02.com/api/carts/selesai");
+      floatingActionButton: hasDalamPengiriman && selectedIds.isNotEmpty
+          ? FloatingActionButton.extended(
+        onPressed: () async {
+          final token = await UserToken().getToken();
+          final url = Uri.parse("https://pakailagi.user.cloudjkt02.com/api/carts/selesai");
 
           final response = await http.post(
             url,
@@ -245,19 +254,16 @@ class ProsesCartState extends State<ProsesCart> {
               "Content-Type": "application/json",
               "Authorization": "Bearer $token",
             },
-            body: jsonEncode(
-                {"id": selectedIds.toList()}),
+            body: jsonEncode({"id": selectedIds.toList()}),
           );
 
           if (response.statusCode == 200) {
             fetchItems();
           }
         },
-        backgroundColor: Colors.white,
-        child: Icon(
-          Icons.check,
-          color: AppColors.primary500,
-        ),
+        backgroundColor: AppColors.primary600,
+        label: const Text("Konfirmasi Selesai", style: TextStyle(color: Colors.white)),
+        icon: const Icon(Icons.check, color: Colors.white),
       )
           : null,
     );

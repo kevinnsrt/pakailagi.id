@@ -6,14 +6,14 @@ import 'package:tubes_pm/authentication/token.dart';
 import 'package:tubes_pm/colors/colors.dart';
 import 'package:http/http.dart' as http;
 
-class SelesaiPage extends StatefulWidget {
-  const SelesaiPage({super.key});
+class BatalPage extends StatefulWidget {
+  const BatalPage({super.key});
 
   @override
-  State<SelesaiPage> createState() => SelesaiPageState();
+  State<BatalPage> createState() => BatalPageState();
 }
 
-class SelesaiPageState extends State<SelesaiPage> {
+class BatalPageState extends State<BatalPage> {
   List<dynamic>? items;
 
   @override
@@ -45,7 +45,7 @@ class SelesaiPageState extends State<SelesaiPage> {
     }
 
     // 2. Filter items hanya yang berstatus 'Selesai'
-    final cartItems = items!.where((item) => item['status'] == 'Selesai').toList();
+    final cartItems = items!.where((item) => item['status'] == 'Dibatalkan').toList();
 
     // 3. Tampilan jika kosong
     if (cartItems.isEmpty) {
@@ -56,7 +56,7 @@ class SelesaiPageState extends State<SelesaiPage> {
           child: ListView(
             children: const [
               SizedBox(height: 100),
-              Center(child: Text("Belum ada transaksi selesai")),
+              Center(child: Text("Tidak ada transaksi yang dibatalkan")),
             ],
           ),
         ),
