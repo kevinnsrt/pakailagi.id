@@ -162,7 +162,38 @@ class _DetailPageState extends State<DetailPage> {
                             color: AppColors.grayscale500),
                       ),
                     ),
-                    const Icon(Icons.favorite_border),
+                    InkWell(
+                      onTap: () async {
+                        final token = await FirebaseAuth.instance.currentUser!.getIdToken();
+
+                        final url = Uri.parse(
+                          "https://pakailagi.user.cloudjkt02.com/api/wishlist",
+                        );
+
+                        final response = await http.post(
+                          url,
+                          headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json",
+                            "Authorization": "Bearer $token",
+                          },
+                          body: jsonEncode({
+                            "product_id": detailProducts!['id'].toString(),
+                          }),
+                        );
+
+                        if (response.statusCode == 200 || response.statusCode == 201) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Barang menjadi idamanmu")),
+                          );
+                        } else {
+                          print(response.statusCode);
+                          print(response.body);
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Barang sudah ada di wishlist")));
+                        }
+                      },
+                      child: const Icon(Icons.favorite_border),
+                    )
                   ],
                 ),
               ),

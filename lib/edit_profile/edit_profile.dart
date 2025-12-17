@@ -221,8 +221,8 @@ class _EditProfileState extends State<EditProfile> {
                         : null,
                   ),
                   Positioned(
-                    bottom: 6,
-                    right: 6,
+                    bottom:4,
+                    right:-12,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         shape: const CircleBorder(),

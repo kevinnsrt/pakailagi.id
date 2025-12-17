@@ -9,6 +9,7 @@ import 'package:tubes_pm/edit_password/edit_password.dart';
 import 'package:tubes_pm/edit_profile/edit_profile.dart';
 import 'package:tubes_pm/faq/FaqPage.dart';
 import 'package:tubes_pm/map/edit_location.dart';
+import 'package:tubes_pm/wishlist/wishlist.dart';
 
 
 class ProfilePage extends StatefulWidget {
@@ -20,7 +21,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   String? address;
-  String url_picture="";
+  String? url_picture;
   Future<void> _signOut() async {
     await FirebaseAuth.instance.signOut();
     await GoogleSignIn().signOut();
@@ -59,22 +60,25 @@ class _ProfilePageState extends State<ProfilePage> {
       print(data);
       if (data == null || data.isEmpty) return;
 
-      // Ambil field user
       final userMap = data is List ? data[0] : data;
 
-      // Latitude & longitude fallback
-      double lat = (userMap["latitude"] ?? 0.0);
-      double lng = (userMap["longitude"] ?? 0.0);
-      String url_profile = (userMap["profile_picture"]);
+      final double lat = (userMap["latitude"] as num?)?.toDouble() ?? 0.0;
+      final double lng = (userMap["longitude"] as num?)?.toDouble() ?? 0.0;
 
-      String alamat = await getAddressFromLatLng(lat, lng);
+      final String? urlProfile = userMap["profile_picture"] as String?;
+
+      String alamat = "Alamat belum diatur";
+      if (lat != 0.0 && lng != 0.0) {
+        alamat = await getAddressFromLatLng(lat, lng);
+      }
 
       if (!mounted) return;
       setState(() {
         userData = userMap;
         address = alamat;
-        url_picture = url_profile;
+        url_picture = urlProfile;
       });
+
 
     } catch (e) {
       print("Error fetching user data: $e");
@@ -148,15 +152,12 @@ class _ProfilePageState extends State<ProfilePage> {
                           CircleAvatar(
                             radius: 32,
                             backgroundColor: Colors.grey[200],
-                            child: ClipOval(
-                              child: Image.network(
-                                url_picture,
-                                width: 64,   // 2 * radius
-                                height: 64,  // 2 * radius
-                                fit: BoxFit.cover, // biar memenuhi lingkaran
-                                errorBuilder: (context, error, stackTrace) => Icon(Icons.person), // fallback kalau gambar gagal
-                              ),
-                            ),
+                            backgroundImage: url_picture != null
+                                ? NetworkImage(url_picture!)
+                                : null,
+                            child: url_picture == null
+                                ? const Icon(Icons.person, size: 32, color: Colors.grey)
+                                : null,
                           ),
                           SizedBox(width: 12),
                           Expanded(
@@ -216,7 +217,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 children: [
                                   Icon(Icons.contacts),
                                   SizedBox(width: 8),
-                                  Text("Whatsapp"),
+                                  Text("Contact Us"),
                                   SizedBox(width: 8),
                                   Icon(Icons.arrow_forward_ios_outlined,
                                       color: AppColors.grayscale400)
@@ -233,14 +234,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                   backgroundColor: Colors.white,
                                   elevation: 6,
                                   foregroundColor: AppColors.primary700),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=> WishlistPage()));
+                              },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(Icons.favorite_border_outlined),
                                   SizedBox(width: 8),
                                   Flexible(
-                                      child: Text("Favorit Saya",
+                                      child: Text("Wishlist",
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis)),
                                   SizedBox(width: 8),

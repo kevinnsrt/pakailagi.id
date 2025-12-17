@@ -42,8 +42,6 @@ class _HomePage2State extends State<HomePage2> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: const [
                       Icon(Icons.notifications, color: Colors.white),
-                      SizedBox(width: 10),
-                      Icon(Icons.favorite_border, color: Colors.white),
                     ],
                   ),
                 ),

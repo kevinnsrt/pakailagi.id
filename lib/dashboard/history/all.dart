@@ -167,17 +167,17 @@ class CartAllState extends State<CartAll> {
                 Checkbox(
                   value: selectAll,
                   onChanged: (value) {
-                  setState(() {
-                    if (value == true) {
-                      selectedIds = items!
-                          .where((item) => item['status'] == 'Dikeranjang')
-                          .map<int>((item) => item['id'])
-                          .toSet();
-                    } else {
-                      selectedIds.clear();
-                    }
-                  });
-                },
+                    setState(() {
+                      if (value == true) {
+                        selectedIds = items!
+                            .where((item) => item['status'] == 'Dikeranjang')
+                            .map<int>((item) => item['id'])
+                            .toSet();
+                      } else {
+                        selectedIds.clear();
+                      }
+                    });
+                  },
 
                 ),
                 const Text("Pilih Semua")

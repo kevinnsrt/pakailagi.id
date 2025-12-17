@@ -1,16 +1,20 @@
+import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tubes_pm/api/get-all-items.dart';
+import 'package:tubes_pm/authentication/token.dart';
 import 'package:tubes_pm/colors/colors.dart';
+import 'package:http/http.dart' as http;
 import 'package:tubes_pm/dashboard/detail/detail.dart';
 
-class AllItemsPage extends StatefulWidget {
-  const AllItemsPage({super.key});
+class WishlistPage extends StatefulWidget {
+
+  const WishlistPage({super.key});
 
   @override
-  State<AllItemsPage> createState() => _AllItemsPageState();
+  State<WishlistPage> createState() => _WishlistPageState();
 }
 
-class _AllItemsPageState extends State<AllItemsPage> {
+class _WishlistPageState extends State<WishlistPage> {
   List<dynamic>? items;
 
   @override
@@ -20,31 +24,47 @@ class _AllItemsPageState extends State<AllItemsPage> {
   }
 
   Future<void> fetchItems() async {
-    final result = await GetAllItems().get();
+    final token = await UserToken().getToken();
+    if (token == null) return;
+
+    final url = Uri.parse(
+        "https://pakailagi.user.cloudjkt02.com/api/wishlist/user");
+
+    final response = await http.post(
+      url,
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token",
+      },
+    );
+
+    if (response.statusCode != 200) return;
+
+    final result = json.decode(response.body);
+    print(result);
     if (!mounted) return;
 
-    // sorting by status
-    result.sort((a, b) {
-      if (a['status'] == 'Ready' && b['status'] != 'Ready') {
-        return -1;
-      }
-      if (a['status'] != 'Ready' && b['status'] == 'Ready') {
-        return 1;
-      }
-      return 0;
-    });
+    // sorting
+    // result.sort((a, b) {
+    //   if (a['status'] == 'Ready' && b['status'] != 'Ready') {
+    //     return -1;
+    //   }
+    //   if (a['status'] != 'Ready' && b['status'] == 'Ready') {
+    //     return 1;
+    //   }
+    //   return 0;
+    // });
     setState(() {
       items = result;
     });
   }
-
-  bool isSoldOut(dynamic item) {
-    return item['status'] == 'Sold Out';
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: Text("Wishlist"),
+      ),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: RefreshIndicator(
@@ -63,12 +83,9 @@ class _AllItemsPageState extends State<AllItemsPage> {
             ),
             itemBuilder: (context, index) {
               final item = items![index];
-              final soldOut = isSoldOut(item);
-
+              final product = item['product'];
               return GestureDetector(
-                onTap: soldOut
-                    ? null
-                    : () {
+                onTap:() {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -95,48 +112,29 @@ class _AllItemsPageState extends State<AllItemsPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      /// ============================
                       /// IMAGE + SOLD OUT OVERLAY
-                      /// ============================
                       Stack(
                         children: [
                           Image.network(
-                            item['image_path'],
+                            product['image_path'],
                             width: double.infinity,
                             height: 169,
                             fit: BoxFit.cover,
                             errorBuilder:
                                 (context, error, stackTrace) {
                               return const Icon(
-                                  Icons.broken_image,
-                                  size: 50);
+                                Icons.broken_image,
+                                size: 50,
+                              );
                             },
                           ),
-                          if (soldOut)
-                            Container(
-                              width: double.infinity,
-                              height: 169,
-                              color:
-                              Colors.black.withOpacity(0.5),
-                              alignment: Alignment.center,
-                              child: const Text(
-                                "SOLD OUT",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  letterSpacing: 1.2,
-                                ),
-                              ),
-                            ),
+
                         ],
                       ),
 
                       const SizedBox(height: 6),
 
-                      /// ============================
                       /// KONDISI
-                      /// ============================
                       Container(
                         width: 109,
                         height: 18,
@@ -147,7 +145,7 @@ class _AllItemsPageState extends State<AllItemsPage> {
                         ),
                         alignment: Alignment.center,
                         child: Text(
-                          item['kondisi'],
+                          product['kondisi'],
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 10,
@@ -158,11 +156,9 @@ class _AllItemsPageState extends State<AllItemsPage> {
 
                       const SizedBox(height: 4),
 
-                      /// ============================
                       /// NAMA
-                      /// ============================
                       Text(
-                        item['name'],
+                        product['name'],
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -174,7 +170,7 @@ class _AllItemsPageState extends State<AllItemsPage> {
 
                       /// UKURAN
                       Text(
-                        item['ukuran'].toString(),
+                        product['ukuran'].toString(),
                         style: TextStyle(
                           color: AppColors.grayscale500,
                           fontSize: 10,
@@ -182,14 +178,51 @@ class _AllItemsPageState extends State<AllItemsPage> {
                       ),
 
                       /// PRICE
-                      Text(
-                        "RP ${item['price']}",
-                        style: TextStyle(
-                          color: AppColors.primary500,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "RP ${product['price']}",
+                            style: TextStyle(
+                              color: AppColors.primary500,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () async {
+                              final token = await UserToken().getToken();
+                              if (token == null) return;
+
+                              final url = Uri.parse(
+                                "https://pakailagi.user.cloudjkt02.com/api/delete/${item['id']}",
+                              );
+
+                              final response = await http.delete(
+                                url,
+                                headers: {
+                                  "Authorization": "Bearer $token",
+                                },
+                              );
+
+                              if (response.statusCode == 200) {
+                                await fetchItems();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text("Barang dihapus dari wishlist")),
+                                );
+                              } else {
+                                print(response.body);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text("Barang gagal dihapus")),
+                                );
+                              }
+                            },
+
+                            child: Icon(Icons.delete,color: Colors.red,),
+                          ),
+                        ],
+                      )
                     ],
                   ),
                 ),

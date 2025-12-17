@@ -46,6 +46,17 @@ class _FilterPageState extends State<FilterPage> {
     final result = json.decode(response.body);
     if (!mounted) return;
 
+    // sorting
+    result.sort((a, b) {
+      if (a['status'] == 'Ready' && b['status'] != 'Ready') {
+        return -1;
+      }
+      if (a['status'] != 'Ready' && b['status'] == 'Ready') {
+        return 1;
+      }
+      return 0;
+    });
+
     setState(() {
       items = result;
     });

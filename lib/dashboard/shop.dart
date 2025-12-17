@@ -117,6 +117,7 @@ class _ShopPageState extends State<ShopPage> {
                   _categoryButton("Bags", "Tas"),
                   _categoryButton("Shoes", "Sepatu"),
                   _categoryButton("Accessories", "Accessories"),
+                  _categoryButton("Others", "Others"),
                 ],
               ),
             ),
