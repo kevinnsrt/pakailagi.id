@@ -10,7 +10,7 @@ class ApiServiceRegister {
     required String number,
     required double latitude,
     required double longitude,
-    required String token,
+    var token,
   }) async {
 
     final token = await UserToken().getToken();
