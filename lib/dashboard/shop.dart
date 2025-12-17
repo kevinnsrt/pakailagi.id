@@ -58,8 +58,26 @@ class _ShopPageState extends State<ShopPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white, // Tambahkan ini agar tidak berubah warna saat scroll
+        elevation: 0,
         automaticallyImplyLeading: false,
-        title: Text("Belanja",style: TextStyle(fontWeight: FontWeight.bold),),
+        title: GestureDetector(
+          onTap: () {
+            setState(() {
+              _selectedIndex = 0;
+              _keyword.clear();
+              searchKeyword = "";
+              selectedCategory = "";
+            });
+          },
+          child: const Text(
+            "Belanja",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.black, // Pastikan warna teks terlihat
+            ),
+          ),
+        ),
       ),
       body: SafeArea(
         child: Column(

@@ -1,10 +1,8 @@
 import 'dart:convert';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:tubes_pm/api/get_user_cart.dart';
-import 'package:tubes_pm/authentication/token.dart';
 import 'package:tubes_pm/colors/colors.dart';
-import 'package:http/http.dart' as http;
 
 class SelesaiPage extends StatefulWidget {
   const SelesaiPage({super.key});
@@ -21,6 +19,17 @@ class SelesaiPageState extends State<SelesaiPage> {
     super.initState();
     fetchItems();
   }
+
+  // Fungsi Helper Format Rupiah
+  String formatCurrency(dynamic number) {
+    final currencyFormatter = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp',
+      decimalDigits: 0,
+    );
+    return currencyFormatter.format(double.parse(number.toString()));
+  }
+
   Future<void> refresh() async {
     await fetchItems();
   }
@@ -36,7 +45,6 @@ class SelesaiPageState extends State<SelesaiPage> {
 
   @override
   Widget build(BuildContext context) {
-    // 1. Cek loading status
     if (items == null) {
       return const Scaffold(
         backgroundColor: Colors.white,
@@ -44,19 +52,24 @@ class SelesaiPageState extends State<SelesaiPage> {
       );
     }
 
-    // 2. Filter items hanya yang berstatus 'Selesai'
     final cartItems = items!.where((item) => item['status'] == 'Selesai').toList();
 
-    // 3. Tampilan jika kosong
     if (cartItems.isEmpty) {
       return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFFF8F9FA),
         body: RefreshIndicator(
           onRefresh: fetchItems,
           child: ListView(
-            children: const [
-              SizedBox(height: 100),
-              Center(child: Text("Belum ada transaksi selesai")),
+            children: [
+              SizedBox(height: MediaQuery.of(context).size.height * 0.2),
+              Icon(Icons.check_circle_outline, size: 80, color: Colors.grey[300]),
+              const SizedBox(height: 16),
+              const Center(
+                child: Text(
+                  "Belum ada transaksi selesai",
+                  style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500),
+                ),
+              ),
             ],
           ),
         ),
@@ -64,133 +77,109 @@ class SelesaiPageState extends State<SelesaiPage> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF8F9FA), // Konsisten dengan halaman proses
       body: RefreshIndicator(
         onRefresh: fetchItems,
         child: ListView.builder(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           itemCount: cartItems.length,
           itemBuilder: (context, index) {
             final item = cartItems[index];
             final product = item['product'];
 
             return Container(
-              margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+              margin: const EdgeInsets.only(bottom: 12),
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(12),
                 color: Colors.white,
-                boxShadow: const [
+                boxShadow: [
                   BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 4,
-                    offset: Offset(0, 2),
+                    color: Colors.black.withOpacity(0.03),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
                   )
                 ],
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   /// --- STATUS HEADER ---
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: AppColors.primary600,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          item['status'],
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
+                      Row(
+                        children: [
+                          const Icon(Icons.check_circle, size: 16, color: Colors.green),
+                          const SizedBox(width: 6),
+                          const Text(
+                            "Pesanan Selesai",
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                      )
+                        ],
+                      ),
+                      Text(
+                        "#TRX-${item['id']}",
+                        style: TextStyle(fontSize: 10, color: Colors.grey[400]),
+                      ),
                     ],
                   ),
-
-                  const SizedBox(height: 12),
+                  const Divider(height: 20),
 
                   /// --- ITEM ROW ---
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      /// Bagian Gambar dengan Loading & Error Builder
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.network(
                           product['image_path'],
-                          width: 90,
-                          height: 90,
+                          width: 80,
+                          height: 80,
                           fit: BoxFit.cover,
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return Container(
-                              width: 90,
-                              height: 90,
-                              color: Colors.grey[100],
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  value: loadingProgress.expectedTotalBytes != null
-                                      ? loadingProgress.cumulativeBytesLoaded /
-                                      loadingProgress.expectedTotalBytes!
-                                      : null,
-                                ),
-                              ),
-                            );
-                          },
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              width: 90,
-                              height: 90,
-                              color: Colors.grey[200],
-                              child: const Icon(Icons.broken_image,
-                                  size: 30, color: Colors.grey),
-                            );
-                          },
+                          errorBuilder: (context, error, stackTrace) => Container(
+                            width: 80, height: 80, color: Colors.grey[100],
+                            child: const Icon(Icons.broken_image, color: Colors.grey),
+                          ),
                         ),
                       ),
-
                       const SizedBox(width: 12),
-
-                      /// Bagian Info Text
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               product['name'] ?? "No Name",
-                              maxLines: 2,
+                              maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                              ),
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               "Ukuran: ${product['ukuran'] ?? "-"}",
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: 12,
-                              ),
+                              style: TextStyle(color: Colors.grey[500], fontSize: 11),
                             ),
-                            const SizedBox(height: 8),
-                            Align(
-                              alignment: Alignment.bottomRight,
-                              child: Text(
-                                "IDR ${product['price']}",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15,
-                                  color: AppColors.primary600,
+                            const SizedBox(height: 12),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "Total Belanja:",
+                                  style: TextStyle(fontSize: 11, color: Colors.grey),
                                 ),
-                              ),
+                                Text(
+                                  formatCurrency(product['price']),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 15,
+                                    color: AppColors.grayscale900, // Hitam agar terlihat netral tapi tegas
+                                  ),
+                                ),
+                              ],
                             )
                           ],
                         ),

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:tubes_pm/api/get_user_cart.dart';
 import 'package:tubes_pm/authentication/token.dart';
@@ -23,119 +24,27 @@ class CartAllState extends State<CartAll> {
     fetchItems();
   }
 
-  Future<void> fetchItems() async {
-    final result = await GetUserCart().getusercart();
-    if (!mounted) return;
-
-    setState(() {
-      items = result;
-      selectedIds.clear();
-    });
+  // Helper Format Rupiah
+  String formatCurrency(dynamic number) {
+    final currencyFormatter = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp',
+      decimalDigits: 0,
+    );
+    return currencyFormatter.format(double.parse(number.toString()));
   }
-
   Future<void> refresh() async {
     await fetchItems();
   }
 
 
-  void _showDialog(BuildContext context, int total) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        title: const Text("Pembayaran", style: TextStyle(fontWeight: FontWeight.bold)),
-        content: SizedBox(
-          // Menggunakan SizedBox untuk membatasi tinggi dialog
-          height: 350,
-          width: double.maxFinite,
-          child: Column(
-            mainAxisSize: MainAxisSize.min, // Agar kolom mengikuti isi
-            crossAxisAlignment: CrossAxisAlignment.center, // Perbaikan di sini
-            children: [
-              Text(
-                "Silahkan lakukan pembayaran:\nIDR $total",
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 20),
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[300]!),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      'assets/qris_test.jpg',
-                      fit: BoxFit.contain, // BoxFit menggunakan contain, bukan CrossAxis
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Batal", style: TextStyle(color: Colors.grey)),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary600,
-              foregroundColor: Colors.white,
-            ),
-            onPressed: () async {
-              Navigator.pop(context);
-              List<int> idToPost = selectedIds.toList();
-              final token = await UserToken().getToken();
-
-              if (token == null) {
-                TopNotif.error(context, "Session habis, silakan login ulang");
-                return;
-              }
-
-              if (selectedIds.isEmpty) {
-                TopNotif.error(context, "Pilih minimal 1 item");
-                return;
-              }
-
-              final url = Uri.parse("https://pakailagi.user.cloudjkt02.com/api/carts/proses");
-
-              final response = await http.post(
-                url,
-                headers: {
-                  "Content-Type": "application/json",
-                  "Authorization": "Bearer $token",
-                },
-                body: jsonEncode({"id": idToPost}),
-              );
-
-              if (response.statusCode == 200) {
-                TopNotif.success(context, "Barang berhasil di checkout");
-                fetchItems();
-              }
-            },
-            child: const Text("Konfirmasi Pembayaran"),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> deleteCartItem(int id) async {
-    final token = await UserToken().getToken();
-    if (token == null) return;
-
-    final url = Uri.parse("https://pakailagi.user.cloudjkt02.com/api/carts/delete/$id");
-    final response = await http.delete(
-      url,
-      headers: {"Authorization": "Bearer $token"},
-    );
-
-    if (response.statusCode != 200) throw Exception("Gagal hapus item");
+  Future<void> fetchItems() async {
+    final result = await GetUserCart().getusercart();
+    if (!mounted) return;
+    setState(() {
+      items = result;
+      selectedIds.clear();
+    });
   }
 
   int getTotal() {
@@ -152,36 +61,51 @@ class CartAllState extends State<CartAll> {
   bool get selectAll {
     if (items == null) return false;
     final cartItems = items!.where((item) => item['status'] == 'Dikeranjang');
-    return cartItems.isNotEmpty &&
-        cartItems.every((item) => selectedIds.contains(item['id']));
+    return cartItems.isNotEmpty && cartItems.every((item) => selectedIds.contains(item['id']));
+  }
+
+  Future<void> deleteCartItem(int id) async {
+    final token = await UserToken().getToken();
+    if (token == null) return;
+    final url = Uri.parse("https://pakailagi.user.cloudjkt02.com/api/carts/delete/$id");
+    final response = await http.delete(url, headers: {"Authorization": "Bearer $token"});
+    if (response.statusCode != 200) throw Exception("Gagal");
   }
 
   @override
   Widget build(BuildContext context) {
-    if (items == null) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
+    if (items == null) return const Center(child: CircularProgressIndicator());
     final cartItems = items!.where((item) => item['status'] == 'Dikeranjang').toList();
 
     if (cartItems.isEmpty) {
-      return const Center(child: Text("Keranjang kosong"));
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.shopping_cart_outlined, size: 80, color: Colors.grey[300]),
+            const SizedBox(height: 16),
+            const Text("Keranjang kosong", style: TextStyle(color: Colors.grey)),
+          ],
+        ),
+      );
     }
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF8F9FA), // Abu-abu sangat muda agar card putih pop-out
       body: RefreshIndicator(
         onRefresh: fetchItems,
         child: Column(
           children: [
             /// HEADER PILIH SEMUA
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               child: Row(
                 children: [
                   Checkbox(
                     value: selectAll,
                     activeColor: AppColors.primary600,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                     onChanged: (value) {
                       setState(() {
                         if (value == true) {
@@ -193,6 +117,9 @@ class CartAllState extends State<CartAll> {
                     },
                   ),
                   const Text("Pilih Semua", style: TextStyle(fontWeight: FontWeight.bold)),
+                  const Spacer(),
+                  if (selectedIds.isNotEmpty)
+                    Text("${selectedIds.length} Item terpilih", style: TextStyle(color: AppColors.primary600, fontSize: 12)),
                 ],
               ),
             ),
@@ -200,6 +127,7 @@ class CartAllState extends State<CartAll> {
             /// LIST ITEM
             Expanded(
               child: ListView.builder(
+                padding: const EdgeInsets.only(bottom: 100, top: 10), // Padding bawah agar tidak tertutup bar checkout
                 itemCount: cartItems.length,
                 itemBuilder: (context, index) {
                   final item = cartItems[index];
@@ -210,60 +138,27 @@ class CartAllState extends State<CartAll> {
                     direction: DismissDirection.endToStart,
                     background: Container(
                       alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.only(right: 20),
-                      margin: const EdgeInsets.symmetric(vertical: 8),
-                      color: Colors.red,
-                      child: const Icon(Icons.delete, color: Colors.white),
+                      padding: const EdgeInsets.only(right: 25),
+                      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                      decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(12)),
+                      child: const Icon(Icons.delete_outline, color: Colors.white, size: 28),
                     ),
-                    confirmDismiss: (_) async {
-                      final confirm = await showDialog<bool>(
-                        context: context,
-                        builder: (_) => AlertDialog(
-                          title: const Text("Hapus item?"),
-                          content: const Text("Item akan dihapus dari keranjang"),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, false),
-                              child: const Text("Batal"),
-                            ),
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, true),
-                              child: const Text("Hapus", style: TextStyle(color: Colors.red)),
-                            ),
-                          ],
-                        ),
-                      );
-
-                      if (confirm == true) {
-                        try {
-                          await deleteCartItem(item['id']);
-                          return true;
-                        } catch (_) {
-                          TopNotif.error(context, "Gagal menghapus item");
-                          return false;
-                        }
-                      }
-                      return false;
-                    },
-                    onDismissed: (_) {
+                    onDismissed: (_) async {
+                      await deleteCartItem(item['id']);
                       setState(() {
                         items!.removeWhere((e) => e['id'] == item['id']);
                         selectedIds.remove(item['id']);
                       });
-                      TopNotif.success(context, "Item berhasil dihapus");
+                      TopNotif.success(context, "Item dihapus");
                     },
                     child: Container(
-                      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                      margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(8),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 4,
-                            offset: Offset(0, 2),
-                          )
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10, offset: const Offset(0, 4)),
                         ],
                       ),
                       child: Row(
@@ -271,81 +166,30 @@ class CartAllState extends State<CartAll> {
                           Checkbox(
                             value: selectedIds.contains(item['id']),
                             activeColor: AppColors.primary600,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                             onChanged: (value) {
                               setState(() {
-                                if (value == true) {
-                                  selectedIds.add(item['id']);
-                                } else {
-                                  selectedIds.remove(item['id']);
-                                }
+                                if (value == true) selectedIds.add(item['id']);
+                                else selectedIds.remove(item['id']);
                               });
                             },
                           ),
-
-                          /// GAMBAR PRODUK
                           ClipRRect(
-                            borderRadius: BorderRadius.circular(6),
+                            borderRadius: BorderRadius.circular(8),
                             child: Image.network(
                               product['image_path'],
-                              width: 80,
-                              height: 80,
-                              fit: BoxFit.cover,
-                              loadingBuilder: (context, child, loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return Container(
-                                  width: 80,
-                                  height: 80,
-                                  color: Colors.grey[100],
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      value: loadingProgress.expectedTotalBytes != null
-                                          ? loadingProgress.cumulativeBytesLoaded /
-                                          loadingProgress.expectedTotalBytes!
-                                          : null,
-                                    ),
-                                  ),
-                                );
-                              },
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  width: 80,
-                                  height: 80,
-                                  color: Colors.grey[200],
-                                  child: const Icon(Icons.broken_image, size: 30, color: Colors.grey),
-                                );
-                              },
+                              width: 70, height: 70, fit: BoxFit.cover,
                             ),
                           ),
-
                           const SizedBox(width: 12),
-
-                          /// INFO PRODUK
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  product['name'],
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  "Size: ${product['ukuran'] ?? "-"}",
-                                  style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                                ),
-                                const SizedBox(height: 8),
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Text(
-                                    "IDR ${product['price']}",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColors.primary600,
-                                    ),
-                                  ),
-                                ),
+                                Text(product['name'], maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                                Text("Size: ${product['ukuran'] ?? "-"}", style: TextStyle(color: Colors.grey[500], fontSize: 11)),
+                                const SizedBox(height: 6),
+                                Text(formatCurrency(product['price']), style: TextStyle(fontWeight: FontWeight.w800, color: AppColors.primary600, fontSize: 15)),
                               ],
                             ),
                           )
@@ -359,28 +203,96 @@ class CartAllState extends State<CartAll> {
           ],
         ),
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(left: 30),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Text(
-                "Total: IDR ${getTotal()}",
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+
+      /// BOTTOM CHECKOUT BAR
+      bottomSheet: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, -4))],
+        ),
+        child: SafeArea(
+          child: Row(
+            children: [
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("Total Harga", style: TextStyle(fontSize: 12, color: Colors.grey)),
+                  Text(formatCurrency(getTotal()), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primary600)),
+                ],
               ),
-            ),
-            FloatingActionButton.extended(
-              backgroundColor: AppColors.primary600,
-              onPressed: selectedIds.isEmpty ? null : () => _showDialog(context, getTotal()),
-              label: const Text("Checkout", style: TextStyle(color: Colors.white)),
-              icon: const Icon(Icons.shopping_cart_checkout, color: Colors.white),
-            ),
-          ],
+              const SizedBox(width: 20),
+              Expanded(
+                child: SizedBox(
+                  height: 48,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary600,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      elevation: 0,
+                    ),
+                    onPressed: selectedIds.isEmpty ? null : () => _showDialog(context, getTotal()),
+                    child: const Text("Checkout", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
+  }
+
+  // --- Fungsi Dialog Pembayaran (QRIS) tetap sama, hanya perapihan styling ---
+  void _showDialog(BuildContext context, int total) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Center(child: Text("Pembayaran QRIS", style: TextStyle(fontWeight: FontWeight.bold))),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text("Total Pembayaran:", style: TextStyle(color: Colors.grey[600])),
+            Text(formatCurrency(total), style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: AppColors.primary600)),
+            const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(border: Border.all(color: Colors.grey[200]!), borderRadius: BorderRadius.circular(12)),
+              child: Image.asset('assets/qris_test.jpg', height: 200),
+            ),
+            const SizedBox(height: 10),
+            const Text("Scan QRIS di atas untuk membayar", style: TextStyle(fontSize: 11, color: Colors.grey)),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Batal")),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary600, foregroundColor: Colors.white),
+            onPressed: () async {
+              Navigator.pop(context);
+              _processCheckout();
+            },
+            child: const Text("Konfirmasi"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _processCheckout() async {
+    final token = await UserToken().getToken();
+    final url = Uri.parse("https://pakailagi.user.cloudjkt02.com/api/carts/proses");
+    final response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json", "Authorization": "Bearer $token"},
+      body: jsonEncode({"id": selectedIds.toList()}),
+    );
+    if (response.statusCode == 200) {
+      TopNotif.success(context, "Checkout berhasil!");
+      fetchItems();
+    }
   }
 }

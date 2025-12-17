@@ -6,6 +6,8 @@ import 'package:tubes_pm/authentication/authGate.dart';
 import 'package:tubes_pm/authentication/google_sign_in.dart';
 import 'package:tubes_pm/authentication/login.dart';
 import 'package:tubes_pm/colors/colors.dart';
+import 'package:tubes_pm/edit_password/forgot_password.dart';
+import 'package:tubes_pm/login-register/register/register.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -187,9 +189,14 @@ class _LoginFormState extends State<LoginForm> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         spacing: 4,
                         children: [
-                          Text("Lupa Password ?",
+                          InkWell(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=> ForgotPasswordPage()));
+                            }
+                            ,child: Text("Lupa Password ?",
                             style: TextStyle(color: AppColors.primary700,fontSize: 12,fontWeight: FontWeight.bold
                             ),
+                          ),
                           ),
                           SizedBox(),
                         ],
@@ -302,7 +309,11 @@ class _LoginFormState extends State<LoginForm> {
                     children: [
                       Text("Belum punya akun?",style: TextStyle(color: AppColors.grayscale950
                           ,fontSize: 13),),
-                      Text("Sign Up",style: TextStyle(color: AppColors.primary700,fontWeight: FontWeight.bold,fontSize: 13),)
+                     InkWell(
+                       onTap: (){
+                         Navigator.push(context, MaterialPageRoute(builder: (context)=> const RegisterPage()));
+                       },
+                       child:  Text("Sign Up",style: TextStyle(color: AppColors.primary700,fontWeight: FontWeight.bold,fontSize: 13),),)
                     ],
                   ),
                 ),

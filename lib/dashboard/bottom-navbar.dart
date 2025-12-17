@@ -1,7 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:smooth_transition/smooth_transition.dart';
 import 'package:tubes_pm/authentication/token.dart';
 import 'package:tubes_pm/colors/colors.dart';
 import 'package:tubes_pm/dashboard/history/history.dart';
@@ -18,44 +16,34 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-  // fcm
-  Future<void> _setupFCM() async {
-    // Request permission (Android 13+ & iOS)
-    await FirebaseMessaging.instance.requestPermission();
-
-    // Pastikan token sudah ada
-    // String? token = await FirebaseMessaging.instance.getToken();
-    // print("FCM TOKEN: $token");
-    await FirebaseMessaging.instance.subscribeToTopic('all_users')
-        .then((_) => print('Subscribed OK'))
-        .catchError((e) => print(e));
-
-    // if (token != null) {
-    //
-    //   print("Subscribed to topic: all_users");
-    // } else {
-    //   print("FCM token NULL, subscribe dibatalkan");
-    // }
-  }
-
   int _selectedIndex = 0;
 
+  // List halaman yang akan ditampilkan
   final List<Widget> _screen = [
-    HomePage2(),
-    ProfilePage(),
-    ShopPage(),
-    HistoryPage(),
+    const HomePage2(),
+    const ProfilePage(),
+    const ShopPage(),
+    const HistoryPage(),
   ];
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _setupFCM();
+    // Mengambil index awal dari parameter widget jika ada (misal dari halaman beli/checkout)
     _selectedIndex = widget.selectedIndex;
   }
 
-  void _onTapped (int index){
+  // Setup Firebase Cloud Messaging
+  Future<void> _setupFCM() async {
+    await FirebaseMessaging.instance.requestPermission();
+    await FirebaseMessaging.instance
+        .subscribeToTopic('all_users')
+        .then((_) => print('Subscribed OK'))
+        .catchError((e) => print(e));
+  }
+
+  void _onTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
@@ -64,78 +52,65 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.white,
-        elevation: 16,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          spacing: 50,
-          children: [
-            GestureDetector(
-                onTap: (){
-                  _onTapped(0);
-                },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(Icons.home_filled,color: AppColors.grayscale500,),
-                    Text("Home",style: TextStyle(color: AppColors.grayscale500,fontWeight: FontWeight.bold),),
-                  ],
-                )
-            ),
-
-            GestureDetector(
-              onTap: () async{
-                await UserToken().getToken();
-                _onTapped(2);
-              },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(Icons.shopping_bag_rounded,color: AppColors.grayscale500,),
-                    Text("Shop",style: TextStyle(color: AppColors.grayscale500,fontWeight: FontWeight.bold),),
-                  ],
-                )
-            ),
-
-            GestureDetector(
-              onTap: (){
-               _onTapped(3);
-              },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(Icons.list,color: AppColors.grayscale500,),
-                    Text("History",style: TextStyle(color: AppColors.grayscale500,fontWeight: FontWeight.bold),),
-                  ],
-                )
-            ),
-
-            GestureDetector(
-              onTap: (){
-                _onTapped(1);
-              },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(Icons.person,color: AppColors.grayscale500,),
-                    Text("Profile",style: TextStyle(color: AppColors.grayscale500,fontWeight: FontWeight.bold),),
-                  ],
-                )
-            ),
-          ],
-        ),
-      ),
       backgroundColor: Colors.white,
+      // Menggunakan IndexedStack agar state halaman tidak hilang saat pindah tab
       body: IndexedStack(
         index: _selectedIndex,
         children: _screen,
       ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.white,
+        surfaceTintColor: Colors.white,
+        elevation: 20,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _buildNavItem(0, Icons.home_filled, "Home"),
+            _buildNavItem(2, Icons.shopping_bag_rounded, "Shop"),
+            _buildNavItem(3, Icons.list, "History"),
+            _buildNavItem(1, Icons.person, "Profile"),
+          ],
+        ),
+      ),
     );
+  }
 
+  /// Fungsi Helper untuk membuat Item Navigasi
+  Widget _buildNavItem(int index, IconData icon, String label) {
+    // Logika penentuan warna aktif
+    bool isActive = _selectedIndex == index;
+    Color activeColor = AppColors.primary600; // Warna saat dipilih
+    Color inactiveColor = AppColors.grayscale500; // Warna saat tidak dipilih
+
+    return GestureDetector(
+      onTap: () async {
+        // Logika khusus untuk tab Shop jika diperlukan token
+        if (index == 2) {
+          await UserToken().getToken();
+        }
+        _onTapped(index);
+      },
+      behavior: HitTestBehavior.opaque, // Agar area klik lebih luas
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            color: isActive ? activeColor : inactiveColor,
+            size: 26,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              color: isActive ? activeColor : inactiveColor,
+              fontSize: 12,
+              fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

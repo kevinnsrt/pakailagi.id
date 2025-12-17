@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:tubes_pm/api/get_user_cart.dart';
 import 'package:tubes_pm/authentication/token.dart';
 import 'package:tubes_pm/colors/colors.dart';
+import 'package:tubes_pm/widget/top_notif.dart';
 
 class ProsesCart extends StatefulWidget {
   const ProsesCart({super.key});
@@ -20,6 +22,16 @@ class ProsesCartState extends State<ProsesCart> {
   void initState() {
     super.initState();
     fetchItems();
+  }
+
+  // Fungsi Helper Format Rupiah
+  String formatCurrency(dynamic number) {
+    final currencyFormatter = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp',
+      decimalDigits: 0,
+    );
+    return currencyFormatter.format(double.parse(number.toString()));
   }
 
   Future<void> refresh() async {
@@ -64,24 +76,35 @@ class ProsesCartState extends State<ProsesCart> {
     }
 
     if (cartItems.isEmpty) {
-      return const Center(child: Text("Tidak ada pesanan yang diproses"));
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.assignment_outlined, size: 80, color: Colors.grey[200]),
+            const SizedBox(height: 16),
+            const Text("Belum ada pesanan aktif", style: TextStyle(color: Colors.grey)),
+          ],
+        ),
+      );
     }
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF8F9FA), // Konsisten dengan CartAll
       body: RefreshIndicator(
         onRefresh: fetchItems,
         child: Column(
           children: [
-            /// PILIH SEMUA
+            /// HEADER PILIH SEMUA (Hanya jika ada yang sedang dikirim)
             if (hasDalamPengiriman)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              Container(
+                color: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 child: Row(
                   children: [
                     Checkbox(
                       value: selectAll,
                       activeColor: AppColors.primary600,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                       onChanged: (value) {
                         setState(() {
                           if (value == true) {
@@ -94,7 +117,7 @@ class ProsesCartState extends State<ProsesCart> {
                         });
                       },
                     ),
-                    const Text("Pilih Semua (Diterima)",
+                    const Text("Pilih Semua (Barang Diterima)",
                         style: TextStyle(fontWeight: FontWeight.bold)),
                   ],
                 ),
@@ -103,6 +126,7 @@ class ProsesCartState extends State<ProsesCart> {
             /// LIST ITEM
             Expanded(
               child: ListView.builder(
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 itemCount: cartItems.length,
                 itemBuilder: (context, index) {
                   final item = cartItems[index];
@@ -110,92 +134,87 @@ class ProsesCartState extends State<ProsesCart> {
                   final isPengiriman = item['status'] == 'Dalam Pengiriman';
 
                   return Container(
-                    margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                    margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: const [
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
                         BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 4,
-                          offset: Offset(0, 2),
+                          color: Colors.black.withOpacity(0.03),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
                         ),
                       ],
                     ),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        /// Status Tag
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: isPengiriman ? AppColors.primary600 : Colors.orange,
-                              borderRadius: BorderRadius.circular(6),
+                        /// Status Header
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(
+                                  isPengiriman ? Icons.local_shipping_outlined : Icons.inventory_2_outlined,
+                                  size: 16,
+                                  color: isPengiriman ? AppColors.primary600 : Colors.orange,
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  isPengiriman ? "Sedang Dikirim" : "Sedang Diproses",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: isPengiriman ? AppColors.primary600 : Colors.orange,
+                                  ),
+                                ),
+                              ],
                             ),
-                            child: Text(
-                              item['status'],
-                              style: const TextStyle(color: Colors.white, fontSize: 11),
+                            Text(
+                              "#TRX-${item['id']}",
+                              style: TextStyle(fontSize: 10, color: Colors.grey[400]),
                             ),
-                          ),
+                          ],
                         ),
-                        const SizedBox(height: 8),
+                        const Divider(height: 20),
 
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             /// Checkbox (Hanya muncul jika status Dalam Pengiriman)
                             if (isPengiriman)
-                              Checkbox(
-                                value: selectedIds.contains(item['id']),
-                                activeColor: AppColors.primary600,
-                                onChanged: (value) {
-                                  setState(() {
-                                    if (value == true) {
-                                      selectedIds.add(item['id']);
-                                    } else {
-                                      selectedIds.remove(item['id']);
-                                    }
-                                  });
-                                },
-                              )
-                            else
-                              const SizedBox(width: 8),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 8),
+                                child: Checkbox(
+                                  value: selectedIds.contains(item['id']),
+                                  activeColor: AppColors.primary600,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      if (value == true) {
+                                        selectedIds.add(item['id']);
+                                      } else {
+                                        selectedIds.remove(item['id']);
+                                      }
+                                    });
+                                  },
+                                ),
+                              ),
 
                             /// Gambar Produk
                             ClipRRect(
                               borderRadius: BorderRadius.circular(8),
                               child: Image.network(
                                 product['image_path'],
-                                width: 85,
-                                height: 85,
+                                width: 70,
+                                height: 70,
                                 fit: BoxFit.cover,
-                                loadingBuilder: (context, child, loadingProgress) {
-                                  if (loadingProgress == null) return child;
-                                  return Container(
-                                    width: 85,
-                                    height: 85,
-                                    color: Colors.grey[100],
-                                    child: Center(
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        value: loadingProgress.expectedTotalBytes != null
-                                            ? loadingProgress.cumulativeBytesLoaded /
-                                            loadingProgress.expectedTotalBytes!
-                                            : null,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Container(
-                                    width: 85,
-                                    height: 85,
-                                    color: Colors.grey[200],
-                                    child: const Icon(Icons.broken_image, size: 30, color: Colors.grey),
-                                  );
-                                },
+                                errorBuilder: (context, error, stackTrace) => Container(
+                                  width: 70, height: 70, color: Colors.grey[100],
+                                  child: const Icon(Icons.broken_image, color: Colors.grey),
+                                ),
                               ),
                             ),
 
@@ -208,20 +227,20 @@ class ProsesCartState extends State<ProsesCart> {
                                 children: [
                                   Text(
                                     product['name'],
-                                    maxLines: 2,
+                                    maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(fontWeight: FontWeight.bold),
+                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                                   ),
                                   const SizedBox(height: 4),
                                   Text("Ukuran: ${product['ukuran'] ?? "-"}",
-                                      style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                                      style: TextStyle(color: Colors.grey[500], fontSize: 11)),
                                   const SizedBox(height: 8),
                                   Align(
                                     alignment: Alignment.centerRight,
                                     child: Text(
-                                      "IDR ${product['price']}",
+                                      formatCurrency(product['price']),
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.w800,
                                           color: AppColors.primary600,
                                           fontSize: 15
                                       ),
@@ -242,30 +261,57 @@ class ProsesCartState extends State<ProsesCart> {
         ),
       ),
 
-      floatingActionButton: hasDalamPengiriman && selectedIds.isNotEmpty
-          ? FloatingActionButton.extended(
-        onPressed: () async {
-          final token = await UserToken().getToken();
-          final url = Uri.parse("https://pakailagi.user.cloudjkt02.com/api/carts/selesai");
-
-          final response = await http.post(
-            url,
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": "Bearer $token",
-            },
-            body: jsonEncode({"id": selectedIds.toList()}),
-          );
-
-          if (response.statusCode == 200) {
-            fetchItems();
-          }
-        },
-        backgroundColor: AppColors.primary600,
-        label: const Text("Konfirmasi Selesai", style: TextStyle(color: Colors.white)),
-        icon: const Icon(Icons.check, color: Colors.white),
+      /// BOTTOM BUTTON
+      bottomNavigationBar: hasDalamPengiriman && selectedIds.isNotEmpty
+          ? Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, -4))
+          ],
+        ),
+        child: SafeArea(
+          child: SizedBox(
+            height: 48,
+            child: ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary600,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                elevation: 0,
+              ),
+              onPressed: () => _confirmSelesai(),
+              icon: const Icon(Icons.verified_outlined, color: Colors.white),
+              label: Text(
+                "Konfirmasi ${selectedIds.length} Barang Diterima",
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+        ),
       )
           : null,
     );
+  }
+
+  Future<void> _confirmSelesai() async {
+    final token = await UserToken().getToken();
+    final url = Uri.parse("https://pakailagi.user.cloudjkt02.com/api/carts/selesai");
+
+    final response = await http.post(
+      url,
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token",
+      },
+      body: jsonEncode({"id": selectedIds.toList()}),
+    );
+
+    if (response.statusCode == 200) {
+      TopNotif.success(context, "Pesanan telah selesai. Terima kasih!");
+      fetchItems();
+    } else {
+      TopNotif.error(context, "Gagal mengonfirmasi pesanan");
+    }
   }
 }
