@@ -5,16 +5,16 @@ import 'package:tubes_pm/colors/colors.dart';
 import 'package:http/http.dart' as http;
 import 'package:tubes_pm/dashboard/detail/detail.dart';
 
-class FilterPage extends StatefulWidget {
+class SearchPage extends StatefulWidget {
   final String value; // kategori
   final VoidCallback onBackToAll;
-  const FilterPage({super.key, required this.value,required this.onBackToAll});
+  const SearchPage({super.key, required this.value, required this.onBackToAll,});
 
   @override
-  State<FilterPage> createState() => _FilterPageState();
+  State<SearchPage> createState() => _SearchPageState();
 }
 
-class _FilterPageState extends State<FilterPage> {
+class _SearchPageState extends State<SearchPage> {
   List<dynamic>? items;
 
   @override
@@ -28,7 +28,7 @@ class _FilterPageState extends State<FilterPage> {
     if (token == null) return;
 
     final url = Uri.parse(
-        "https://pakailagi.user.cloudjkt02.com/api/products/kategori");
+        "https://pakailagi.user.cloudjkt02.com/api/products/search");
 
     final response = await http.post(
       url,
@@ -37,7 +37,7 @@ class _FilterPageState extends State<FilterPage> {
         "Authorization": "Bearer $token",
       },
       body: jsonEncode({
-        "kategori": widget.value,
+        "keyword": widget.value,
       }),
     );
 

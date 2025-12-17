@@ -10,15 +10,19 @@ class SelesaiPage extends StatefulWidget {
   const SelesaiPage({super.key});
 
   @override
-  State<SelesaiPage> createState() => _SelesaiPageState();
+  State<SelesaiPage> createState() => SelesaiPageState();
 }
 
-class _SelesaiPageState extends State<SelesaiPage> {
+class SelesaiPageState extends State<SelesaiPage> {
   List<dynamic>? items;
   @override
   void initState() {
     super.initState();
     fetchItems();
+  }
+
+  Future<void> refresh() async {
+    await fetchItems();
   }
 
   Future<void> fetchItems() async {

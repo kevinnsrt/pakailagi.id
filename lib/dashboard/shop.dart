@@ -3,8 +3,7 @@ import 'package:tubes_pm/api/get-all-items.dart';
 import 'package:tubes_pm/colors/colors.dart';
 import 'package:tubes_pm/dashboard/items/all_items.dart';
 import 'package:tubes_pm/dashboard/items/filter_items.dart';
-
-
+import 'package:tubes_pm/dashboard/items/search_items.dart';
 
 class ShopPage extends StatefulWidget {
   const ShopPage({super.key});
@@ -16,7 +15,9 @@ class ShopPage extends StatefulWidget {
 class _ShopPageState extends State<ShopPage> {
   var items;
   String selectedCategory = "";
+  String searchKeyword = "";
   int _selectedIndex = 0;
+  final TextEditingController _keyword = TextEditingController();
 
   void _onTapped(int index, [String? category]) {
     setState(() {
@@ -32,8 +33,25 @@ class _ShopPageState extends State<ShopPage> {
     final screens = [
       AllItemsPage(),
       FilterPage(
+        onBackToAll: (){
+          setState(() {
+            _selectedIndex = 0;
+            selectedCategory = "";
+          });
+        },
           key: ValueKey(selectedCategory)
       ,value: selectedCategory),
+      SearchPage(
+        key: ValueKey(searchKeyword),
+        value: searchKeyword,
+        onBackToAll: () {
+          setState(() {
+            _selectedIndex = 0;
+            _keyword.clear();
+            searchKeyword = "";
+          });
+        },
+      ),
     ];
 
     return Scaffold(
@@ -57,23 +75,32 @@ class _ShopPageState extends State<ShopPage> {
               width: 361,
               height: 46,
               child: TextField(
+                controller: _keyword,
+                textInputAction: TextInputAction.search, // tombol search di keyboard
+                onSubmitted: (value) {
+                  if (value.trim().isEmpty) return;
+
+                  setState(() {
+                    searchKeyword = value.trim();
+                    _selectedIndex = 2;
+                  });
+                },
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                   label: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(Icons.search,
-                          color: AppColors.grayscale500),
                       Text(
                         "Search for item ...",
-                        style:
-                        TextStyle(color: AppColors.grayscale500),
+                        style: TextStyle(color: AppColors.grayscale500),
                       ),
                     ],
                   ),
                 ),
               ),
+
             ),
 
             SizedBox(height: 16),

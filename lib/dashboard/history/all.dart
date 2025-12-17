@@ -11,10 +11,10 @@ class CartAll extends StatefulWidget {
   const CartAll({super.key});
 
   @override
-  State<CartAll> createState() => _CartAllState();
+  State<CartAll> createState() => CartAllState();
 }
 
-class _CartAllState extends State<CartAll> {
+class CartAllState extends State<CartAll> {
   List<dynamic>? items;
   Set<int> selectedIds = {};
 
@@ -22,6 +22,10 @@ class _CartAllState extends State<CartAll> {
   void initState() {
     super.initState();
     fetchItems();
+  }
+
+  Future<void> refresh() async {
+    await fetchItems();
   }
 
   Future<void> fetchItems() async {

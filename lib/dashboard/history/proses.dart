@@ -10,10 +10,10 @@ class ProsesCart extends StatefulWidget {
   const ProsesCart({super.key});
 
   @override
-  State<ProsesCart> createState() => _ProsesCartState();
+  State<ProsesCart> createState() => ProsesCartState();
 }
 
-class _ProsesCartState extends State<ProsesCart> {
+class ProsesCartState extends State<ProsesCart> {
   List<dynamic>? items;
   Set<int> selectedIds = {};
 
@@ -21,6 +21,10 @@ class _ProsesCartState extends State<ProsesCart> {
   void initState() {
     super.initState();
     fetchItems();
+  }
+
+  Future<void> refresh() async {
+    await fetchItems();
   }
 
   Future<void> fetchItems() async {

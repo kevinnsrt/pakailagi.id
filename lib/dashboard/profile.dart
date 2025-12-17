@@ -117,17 +117,20 @@ class _ProfilePageState extends State<ProfilePage> {
     refreshData();
   }
 
-  void refreshData() {
-    userdata();
+  Future<void> refreshData() async {
+    await userdata();
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-
-        child: SingleChildScrollView(
+        child: RefreshIndicator(
+          onRefresh: refreshData,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
               // =============================
@@ -186,7 +189,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           InkWell(onTap: (){
                             Navigator.push(context, MaterialPageRoute(builder: (context)=> EditProfile()));
                           },
-                          child: Icon(Icons.edit, color: AppColors.grayscale700),
+                            child: Icon(Icons.edit, color: AppColors.grayscale700),
                           ),
                         ],
                       ),
@@ -273,9 +276,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       EditLocation(lat: userData!["latitude"],
                         lng: userData!["longitude"],
                         address: address.toString(),))).then((shouldRefresh){
-                        if(shouldRefresh ==  true){
-                          refreshData();
-                        }
+                    if(shouldRefresh ==  true){
+                      refreshData();
+                    }
 
                   });
                 },
@@ -311,7 +314,7 @@ class _ProfilePageState extends State<ProfilePage> {
               SizedBox(height: 40),
             ],
           ),
-        ),
+        ),)
       ),
     );
   }
