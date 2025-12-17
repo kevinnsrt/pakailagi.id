@@ -51,17 +51,6 @@ class _AllItemsPageState extends State<AllItemsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text(
-          "Semua Produk",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
-        scrolledUnderElevation: 0.5,
-        elevation: 0.5,
-        centerTitle: true,
-      ),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: fetchItems,

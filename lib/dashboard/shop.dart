@@ -90,27 +90,36 @@ class _ShopPageState extends State<ShopPage> {
               height: 46,
               child: TextField(
                 controller: _keyword,
-                textInputAction: TextInputAction.search, // tombol search di keyboard
+                textInputAction: TextInputAction.search,
                 onSubmitted: (value) {
                   if (value.trim().isEmpty) return;
-
                   setState(() {
                     searchKeyword = value.trim();
                     _selectedIndex = 2;
                   });
                 },
                 decoration: InputDecoration(
+                  hintText: "Search for item ...",
+                  hintStyle: TextStyle(color: AppColors.grayscale500, fontSize: 14),
+
+                  prefixIcon: Icon(Icons.search, color: AppColors.grayscale500),
+
+                  floatingLabelBehavior: FloatingLabelBehavior.never,
+
+                  contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                  filled: true,
+                  fillColor: Colors.grey[100],
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
                   ),
-                  label: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Search for item ...",
-                        style: TextStyle(color: AppColors.grayscale500),
-                      ),
-                    ],
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: AppColors.primary500, width: 1.5),
                   ),
                 ),
               ),

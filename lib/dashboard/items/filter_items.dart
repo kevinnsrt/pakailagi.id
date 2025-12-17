@@ -79,17 +79,6 @@ class _FilterPageState extends State<FilterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text(widget.value, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white, // Menjaga warna tetap putih saat scroll
-        elevation: 0.5,
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, size: 20),
-          onPressed: widget.onBackToAll,
-        ),
-      ),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
