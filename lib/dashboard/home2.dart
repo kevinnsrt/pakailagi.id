@@ -108,7 +108,6 @@ class _HomePage2State extends State<HomePage2> {
           const SizedBox(height: 16),
           Expanded(
             child: RefreshIndicator(
-              // User juga bisa melakukan "Pull to Refresh" biasa
               onRefresh: _handleLogoRefresh,
               child: ListView(
                 padding: EdgeInsets.zero,
