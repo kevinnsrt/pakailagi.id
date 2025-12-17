@@ -88,9 +88,35 @@ class CartAllState extends State<CartAll> {
               foregroundColor: Colors.white,
             ),
             onPressed: () async {
-              // ... logika checkout Anda tetap sama ...
               Navigator.pop(context);
-              // Lanjutkan proses API seperti kode sebelumnya
+              List<int> idToPost = selectedIds.toList();
+              final token = await UserToken().getToken();
+
+              if (token == null) {
+                TopNotif.error(context, "Session habis, silakan login ulang");
+                return;
+              }
+
+              if (selectedIds.isEmpty) {
+                TopNotif.error(context, "Pilih minimal 1 item");
+                return;
+              }
+
+              final url = Uri.parse("https://pakailagi.user.cloudjkt02.com/api/carts/proses");
+
+              final response = await http.post(
+                url,
+                headers: {
+                  "Content-Type": "application/json",
+                  "Authorization": "Bearer $token",
+                },
+                body: jsonEncode({"id": idToPost}),
+              );
+
+              if (response.statusCode == 200) {
+                TopNotif.success(context, "Barang berhasil di checkout");
+                fetchItems();
+              }
             },
             child: const Text("Konfirmasi Pembayaran"),
           ),
