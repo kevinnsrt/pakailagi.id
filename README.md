@@ -58,6 +58,9 @@ password = pakailagi.id
 ## Github API
 https://github.com/kevinnsrt/pakailagi.id_api.git
 
+## DASHBOARD ADMIN
+https://pakailagi.user.cloudjkt02.com/
+
 ---
 
 ## 📸 Screenshot Aplikasi
