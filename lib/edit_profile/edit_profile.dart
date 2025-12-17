@@ -14,6 +14,7 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfile> {
   File? _imageFile;
+  bool _isUploading = false;
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _numberController = TextEditingController();
@@ -34,26 +35,33 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   // fungsi post ke laravel
-  Future<void> postEdit (String _nama, String _noHp)async{
-    final token = UserToken().getToken();
+  Future<void> postEdit(String name, String number) async {
+    setState(() {
+      _isUploading = true;
+    });
+
+    final token = await UserToken().getToken();
     final url = Uri.parse("https://pakailagi.user.cloudjkt02.com/api/user/profile");
 
-    bool _isUploading = false;
-    
-    var request = http.MultipartRequest('POST', url);
-    request.files.add(await http.MultipartFile.fromPath(
-      'profile_picture', // field di backend
-      _imageFile!.path,
-    ));
-    // tambah field lain
-    request.fields['nama_lengkap'] = _nama;
-    request.fields['no_hp'] = _noHp;
-
-    // jika pakai token (authorization)
-    request.headers['Authorization'] = 'Bearer $token';
-    request.headers['Accept'] = 'application/json';
-
     try {
+      var request = http.MultipartRequest('POST', url);
+
+      // upload file jika ada
+      if (_imageFile != null) {
+        request.files.add(await http.MultipartFile.fromPath(
+          'profile_picture', // harus sesuai backend
+          _imageFile!.path,
+        ));
+      }
+
+      // field lain
+      request.fields['name'] = name;
+      request.fields['number'] = number;
+
+      // headers
+      request.headers['Authorization'] = 'Bearer $token';
+      request.headers['Accept'] = 'application/json';
+
       var response = await request.send();
 
       setState(() {
@@ -62,10 +70,10 @@ class _EditProfileState extends State<EditProfile> {
 
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Upload berhasil!')),
+          const SnackBar(content: Text('Update profile berhasil!')),
         );
         setState(() {
-          _imageFile = null; // reset avatar setelah upload
+          _imageFile = null; // reset file
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -77,10 +85,11 @@ class _EditProfileState extends State<EditProfile> {
         _isUploading = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Terjadi error saat upload')),
+        const SnackBar(content: Text('Terjadi error saat upload')),
       );
     }
   }
+
 
   // dialog untuk pilih sumber gambar
   void _showImageSourceDialog() {

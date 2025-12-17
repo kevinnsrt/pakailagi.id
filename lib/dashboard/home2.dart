@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tubes_pm/api/user-data.dart';
 import 'package:tubes_pm/colors/colors.dart';
 import 'package:tubes_pm/dashboard/items/beranda.dart';
 
@@ -18,18 +17,6 @@ class _HomePage2State extends State<HomePage2> {
   @override
   void initState() {
     super.initState();
-    userdata();
-  }
-
-  // ambil data user
-  Future<void> userdata() async {
-    final user = FirebaseAuth.instance.currentUser;
-
-    if (user != null) {
-      final data = await ApiServiceLogin.loginWithUid(uid: user.uid);
-      userData = data;
-      setState(() {});
-    }
   }
 
   @override

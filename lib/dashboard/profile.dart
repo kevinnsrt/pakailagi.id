@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:tubes_pm/api/user-data.dart';
+import 'package:tubes_pm/authentication/token.dart';
 import 'package:tubes_pm/colors/colors.dart';
 import 'package:tubes_pm/edit_password/edit_password.dart';
 import 'package:tubes_pm/edit_profile/edit_profile.dart';
@@ -20,6 +20,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   String? address;
+  String url_picture="";
   Future<void> _signOut() async {
     await FirebaseAuth.instance.signOut();
     await GoogleSignIn().signOut();
@@ -31,18 +32,54 @@ class _ProfilePageState extends State<ProfilePage> {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
-    final data = await ApiServiceLogin.loginWithUid(uid: user.uid);
+    final token = await UserToken().getToken();
+    if (token == null) {
+      print("Token null, user belum login");
+      return;
+    }
 
-    double lat = data["latitude"];
-    double lng = data["longitude"];
-    String alamat = await getAddressFromLatLng(lat, lng);
+    final url = Uri.parse("https://pakailagi.user.cloudjkt02.com/api/login");
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+        body: jsonEncode({
+          "uid": user.uid,
+        }),
+      );
 
-    setState(() {
-      userData = data;
-      address = alamat;
-    });
+      if (response.statusCode != 200) {
+        print("Backend error: ${response.body}");
+        return;
+      }
+      final data = json.decode(response.body);
+      print(data);
+      if (data == null || data.isEmpty) return;
+
+      // Ambil field user
+      final userMap = data is List ? data[0] : data;
+
+      // Latitude & longitude fallback
+      double lat = (userMap["latitude"] ?? 0.0);
+      double lng = (userMap["longitude"] ?? 0.0);
+      String url_profile = (userMap["profile_picture"]);
+
+      String alamat = await getAddressFromLatLng(lat, lng);
+
+      if (!mounted) return;
+      setState(() {
+        userData = userMap;
+        address = alamat;
+        url_picture = url_profile;
+      });
+
+    } catch (e) {
+      print("Error fetching user data: $e");
+    }
   }
-
 
   Future<String> getAddressFromLatLng(double lat, double lng) async {
     final url = Uri.parse(
@@ -107,7 +144,16 @@ class _ProfilePageState extends State<ProfilePage> {
                         children: [
                           CircleAvatar(
                             radius: 32,
-                            child: Icon(Icons.person, size: 32),
+                            backgroundColor: Colors.grey[200],
+                            child: ClipOval(
+                              child: Image.network(
+                                url_picture,
+                                width: 64,   // 2 * radius
+                                height: 64,  // 2 * radius
+                                fit: BoxFit.cover, // biar memenuhi lingkaran
+                                errorBuilder: (context, error, stackTrace) => Icon(Icons.person), // fallback kalau gambar gagal
+                              ),
+                            ),
                           ),
                           SizedBox(width: 12),
                           Expanded(
